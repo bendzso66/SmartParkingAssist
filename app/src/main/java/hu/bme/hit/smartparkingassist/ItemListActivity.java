@@ -44,9 +44,11 @@ public class ItemListActivity extends AppCompatActivity
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final AccessServlet servlet = new AccessServlet(this);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                servlet.sendFreeLot(20, 19);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
