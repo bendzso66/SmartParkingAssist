@@ -1,14 +1,15 @@
 package hu.bme.hit.smartparkingassist;
 
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -37,6 +38,14 @@ public class ItemDetailActivity extends AppCompatActivity {
             }
         });
 
+        final AccessServlet servlet = new AccessServlet(this);
+        Button btn = (Button)findViewById(R.id.findFreeLotButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                servlet.findFreeLot(20, 19);
+            }
+        });
+
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -55,7 +64,6 @@ public class ItemDetailActivity extends AppCompatActivity {
 
             ItemDetailFragment fragment = ItemDetailFragment.newInstance(getIntent().getStringExtra(ItemDetailFragment.KEY_TITLE_DESCRIPTION_QUERY));
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.item_detail_container, fragment)
                     .commit();
         }
     }

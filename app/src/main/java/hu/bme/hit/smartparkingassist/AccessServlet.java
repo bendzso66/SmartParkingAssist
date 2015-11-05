@@ -13,11 +13,52 @@ import java.net.URL;
 
 public class AccessServlet {
 
-    String apiurl = "http://152.66.248.87:4567/";
+    //String apiurl = "http://152.66.248.87:4567/";
+    String apiurl = "http://192.168.1.4:4567/";
     AppCompatActivity display;
 
     public AccessServlet(AppCompatActivity iDisplay) {
         display = iDisplay;
+    }
+
+    public boolean findFreeLot(double lat, double lon) {
+        //String url = apiurl+"findFreeLot?lat="+lat+"&lon="+lon+"&id="+id+"&rad="+walkdist;
+        String url = apiurl+"findFreeLot?lat="+lat+"&lon="+lon;
+        new AsyncTask<Object, Void, Void>() {
+            private String url;
+
+            public AsyncTask<Object, Void, Void> setData(String curl) {
+                url = curl;
+
+                return this;
+            }
+
+            @Override
+            protected Void doInBackground(Object... param) {
+                String ret = null;
+                try {
+                    Log.d("[Communicator]parameterezett url findFreelot-nal: ",url);
+                    ret = readUrl(url);
+                    Log.d("[Communicator]findFreelotra servertol kapott valasz: ",ret);
+                    display.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(display, "Free lot was found.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    display.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(display, "Free lot finder error.", Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+                }
+
+                return null;
+            }
+        }.setData(url).execute();
+        return true; //new LatLng(lat, lon);
     }
 
     public boolean sendFreeLot(double lat, double lon) {
@@ -45,7 +86,7 @@ public class AccessServlet {
                 } catch (Exception e) {	// Handle exceptions, eg network error
                     display.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(display, "API ERROR", Toast.LENGTH_LONG).show();
+                            Toast.makeText(display, "Free lot sender error.", Toast.LENGTH_LONG).show();
                         }
                     });
                     e.printStackTrace();	// Logcat
