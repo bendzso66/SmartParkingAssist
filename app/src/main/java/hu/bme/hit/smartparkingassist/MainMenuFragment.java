@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link IMainMenuFragment}
  * interface.
  */
-public class ItemListFragment extends ListFragment {
+public class MainMenuFragment extends ListFragment {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -53,7 +53,7 @@ public class ItemListFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemListFragment() {
+    public MainMenuFragment() {
     }
 
     @Override
