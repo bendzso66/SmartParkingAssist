@@ -81,7 +81,7 @@ public class AccessServlet {
                 String ret = null;
                 try {
                     // Log.d("smartparkingassist",url);
-                    ret = readUrl(url+"sendFreeLot?&lat="+lat+"&lon="+lon+"&avail=free&id=3");
+                    ret = readUrl(url+"sendFreeLot?&lat="+lat+"&lon="+lon+"&avail=free&id=1");
                     // Log.d("smartparkingassist", ret);
                 } catch (Exception e) {	// Handle exceptions, eg network error
                     display.runOnUiThread(new Runnable() {
