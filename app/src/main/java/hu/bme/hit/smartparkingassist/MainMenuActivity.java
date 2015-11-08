@@ -13,7 +13,7 @@ import android.view.View;
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ItemDetailActivity} representing
+ * lead to a {@link FindFreeLotActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  * <p/>
@@ -54,7 +54,7 @@ public class MainMenuActivity extends AppCompatActivity
             }
         });
 
-        if (findViewById(R.id.item_detail_container) != null) {
+        if (findViewById(R.id.find_free_lot_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -86,13 +86,13 @@ public class MainMenuActivity extends AppCompatActivity
             ItemDetailFragment fragment = ItemDetailFragment.newInstance(aItem.getTitle());
             // fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
+                    .replace(R.id.find_free_lot_container, fragment)
                     .commit();
 
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Intent detailIntent = new Intent(this, ItemDetailActivity.class);
+            Intent detailIntent = new Intent(this, FindFreeLotActivity.class);
             detailIntent.putExtra(ItemDetailFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
             startActivity(detailIntent);
         }

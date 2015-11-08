@@ -12,7 +12,7 @@ import android.widget.TextView;
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link MainMenuActivity}
- * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
+ * in two-pane mode (on tablets) or a {@link FindFreeLotActivity}
  * on handsets.
  */
 public class ItemDetailFragment extends Fragment {

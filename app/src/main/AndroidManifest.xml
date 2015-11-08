@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
+            android:name=".FindFreeLotActivity"
             android:label="@string/title_item_detail"
             android:parentActivityName=".MainMenuActivity"
             android:theme="@style/AppTheme.NoActionBar" >
