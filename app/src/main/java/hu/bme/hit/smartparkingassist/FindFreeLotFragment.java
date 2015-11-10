@@ -15,12 +15,12 @@ import android.widget.TextView;
  * in two-pane mode (on tablets) or a {@link FindFreeLotActivity}
  * on handsets.
  */
-public class ItemDetailFragment extends Fragment {
+public class FindFreeLotFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String TAG = "ItemDetailFragment";
+    public static final String TAG = "FindFreeLotFragment";
 
     public static final String KEY_TITLE_DESCRIPTION_QUERY = "uniqueItemTitle";
 
@@ -28,8 +28,8 @@ public class ItemDetailFragment extends Fragment {
 
     private static MainMenuItems selectedItem;
 
-    public static ItemDetailFragment newInstance(String itemDesc) {
-        ItemDetailFragment result = new ItemDetailFragment();
+    public static FindFreeLotFragment newInstance(String itemDesc) {
+        FindFreeLotFragment result = new FindFreeLotFragment();
 
         Bundle args = new Bundle();
         args.putString(KEY_TITLE_DESCRIPTION_QUERY, itemDesc);
@@ -38,8 +38,8 @@ public class ItemDetailFragment extends Fragment {
         return result;
     }
 
-    public static ItemDetailFragment newInstance(Bundle args) {
-        ItemDetailFragment result = new ItemDetailFragment();
+    public static FindFreeLotFragment newInstance(Bundle args) {
+        FindFreeLotFragment result = new FindFreeLotFragment();
         result.setArguments(args);
 
         return result;

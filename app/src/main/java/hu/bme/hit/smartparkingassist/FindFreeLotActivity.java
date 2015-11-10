@@ -18,7 +18,7 @@ import android.widget.Button;
  * in a {@link MainMenuActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link ItemDetailFragment}.
+ * more than a {@link FindFreeLotFragment}.
  */
 public class FindFreeLotActivity extends AppCompatActivity {
 
@@ -62,7 +62,7 @@ public class FindFreeLotActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
 
-            ItemDetailFragment fragment = ItemDetailFragment.newInstance(getIntent().getStringExtra(ItemDetailFragment.KEY_TITLE_DESCRIPTION_QUERY));
+            FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(getIntent().getStringExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY));
             getSupportFragmentManager().beginTransaction()
                     .commit();
         }

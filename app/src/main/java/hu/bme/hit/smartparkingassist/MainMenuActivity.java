@@ -19,7 +19,7 @@ import android.view.View;
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link MainMenuFragment} and the item details
- * (if present) is a {@link ItemDetailFragment}.
+ * (if present) is a {@link FindFreeLotFragment}.
  * <p/>
  * This activity also implements the required
  * {@link MainMenuFragment.IMainMenuFragment} interface
@@ -82,8 +82,8 @@ public class MainMenuActivity extends AppCompatActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             // Bundle arguments = new Bundle();
-            // arguments.putString(ItemDetailFragment.ARG_ITEM_ID, id);
-            ItemDetailFragment fragment = ItemDetailFragment.newInstance(aItem.getTitle());
+            // arguments.putString(FindFreeLotFragment.ARG_ITEM_ID, id);
+            FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(aItem.getTitle());
             // fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.find_free_lot_container, fragment)
@@ -93,7 +93,7 @@ public class MainMenuActivity extends AppCompatActivity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, FindFreeLotActivity.class);
-            detailIntent.putExtra(ItemDetailFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
+            detailIntent.putExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
             startActivity(detailIntent);
         }
     }
