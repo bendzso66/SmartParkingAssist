@@ -43,7 +43,7 @@ public class MainMenuAdapter extends BaseAdapter {
         if (itemView == null) {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            itemView = inflater.inflate(R.layout.itemrow, parent, false);
+            itemView = inflater.inflate(R.layout.main_menu_item_row, parent, false);
         }
 
         TextView textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
