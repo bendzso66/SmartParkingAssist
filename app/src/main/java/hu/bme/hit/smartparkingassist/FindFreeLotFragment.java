@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -69,6 +70,14 @@ public class FindFreeLotFragment extends Fragment {
 
         itemDescription = (TextView) rootView.findViewById(R.id.item_detail);
         itemDescription.setText(selectedItem.getTitle());
+
+        final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription);
+        Button btn = (Button) rootView.findViewById(R.id.findFreeLotButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                servlet.findFreeLot(20, 19);
+            }
+        });
 
         return rootView;
     }

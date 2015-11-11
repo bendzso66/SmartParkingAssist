@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -38,14 +37,6 @@ public class FindFreeLotActivity extends AppCompatActivity {
             }
         });
 
-        final AccessServlet servlet = new AccessServlet(this);
-        Button btn = (Button)findViewById(R.id.findFreeLotButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                servlet.findFreeLot(20, 19);
-            }
-        });
-
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -64,6 +55,7 @@ public class FindFreeLotActivity extends AppCompatActivity {
 
             FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(getIntent().getStringExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY));
             getSupportFragmentManager().beginTransaction()
+                    .add(R.id.find_free_lot_container, fragment)
                     .commit();
         }
     }

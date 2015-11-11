@@ -1,8 +1,9 @@
 package hu.bme.hit.smartparkingassist;
 
+import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -15,10 +16,16 @@ public class AccessServlet {
 
     //String apiurl = "http://152.66.248.87:4567/";
     String apiurl = "http://192.168.1.4:4567/";
-    AppCompatActivity display;
+    Activity display;
+    TextView view;
 
-    public AccessServlet(AppCompatActivity iDisplay) {
+    public AccessServlet(Activity iDisplay) {
         display = iDisplay;
+    }
+
+    public AccessServlet(Activity iDisplay, TextView iView) {
+        display = iDisplay;
+        view = iView;
     }
 
     public boolean findFreeLot(double lat, double lon) {
@@ -35,14 +42,14 @@ public class AccessServlet {
 
             @Override
             protected Void doInBackground(Object... param) {
-                String ret = null;
                 try {
                     Log.d("[Communicator]parameterezett url findFreelot-nal: ",url);
-                    ret = readUrl(url);
+                    final String ret = readUrl(url);
                     Log.d("[Communicator]findFreelotra servertol kapott valasz: ",ret);
                     display.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(display, "Free lot was found.", Toast.LENGTH_LONG).show();
+                            view.setText(ret);
                         }
                     });
                 } catch (Exception e) {
