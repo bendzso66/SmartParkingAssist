@@ -1,14 +1,22 @@
 package hu.bme.hit.smartparkingassist;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -69,12 +77,24 @@ public class FindFreeLotFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_find_free_lot, container, false);
 
         itemDescription = (TextView) rootView.findViewById(R.id.item_detail);
-        itemDescription.setText(selectedItem.getTitle());
-
         final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription);
-        Button btn = (Button) rootView.findViewById(R.id.findFreeLotButton);
+
+        final Geocoder geocoder = new Geocoder(this.getActivity(), Locale.ENGLISH);
+        Button btn = (Button) rootView.findViewById(R.id.find_free_lot_button);
+        final EditText address = (EditText) rootView.findViewById(R.id.get_address_field);
+
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                List<Address> locations = null;
+                try {
+                    locations = geocoder.getFromLocationName(address.getText().toString(), 1);
+                    Log.d("[Geocoder]", locations.toString());
+                } catch (IOException e) {
+                    Log.d("[Geocoder]", "Cannot get locations");
+                    e.printStackTrace();
+                }
+                address.getText().toString();
                 servlet.findFreeLot(20, 19);
             }
         });

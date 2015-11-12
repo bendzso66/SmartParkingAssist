@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Smart Parking Assist</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="find_free_lot">Find free lot!</string>
 </resources>
