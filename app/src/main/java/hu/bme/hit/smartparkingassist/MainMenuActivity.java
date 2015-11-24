@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
+import hu.bme.hit.smartparkingassist.communication.AccessServlet;
+
 
 /**
  * An activity representing a list of Items. This activity

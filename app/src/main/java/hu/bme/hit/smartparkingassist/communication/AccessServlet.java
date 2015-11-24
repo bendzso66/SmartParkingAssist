@@ -1,4 +1,4 @@
-package hu.bme.hit.smartparkingassist;
+package hu.bme.hit.smartparkingassist.communication;
 
 import android.app.Activity;
 import android.os.AsyncTask;

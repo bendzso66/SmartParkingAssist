@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import hu.bme.hit.smartparkingassist.communication.AccessServlet;
+
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link MainMenuActivity}
