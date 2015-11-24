@@ -1,16 +1,25 @@
 package hu.bme.hit.smartparkingassist;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+
+import java.util.Date;
 
 import hu.bme.hit.smartparkingassist.communication.AccessServlet;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
+import hu.bme.hit.smartparkingassist.service.LocationService;
 
 
 /**
@@ -37,6 +46,7 @@ public class MainMenuActivity extends AppCompatActivity
      * device.
      */
     private boolean mTwoPane;
+    Intent i = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,4 +111,36 @@ public class MainMenuActivity extends AppCompatActivity
             startActivity(detailIntent);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        i = new Intent(getApplicationContext(),LocationService.class);
+        startService(i);
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver,
+                new IntentFilter(LocationService.BR_NEW_LOCATION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopService(i);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location currentLocation = intent.getParcelableExtra(LocationService.KEY_LOCATION);
+
+            Log.d("[LOCATION] latitude: ", ((Double) currentLocation.getLatitude()).toString());
+            Log.d("[LOCATION] longitude: ", ((Double) currentLocation.getLongitude()).toString());
+            Log.d("[LOCATION] altitude: ", ((Double) currentLocation.getAltitude()).toString());
+            Log.d("[LOCATION] speed: ", ((Float) currentLocation.getSpeed()).toString());
+            Log.d("[LOCATION] provider: ", currentLocation.getProvider());
+            Log.d("[LOCATION] time: ", new Date(currentLocation.getTime()).toString());
+        }
+    };
 }
