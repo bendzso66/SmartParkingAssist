@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import hu.bme.hit.smartparkingassist.communication.AccessServlet;
+import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
+import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
 
 
 /**

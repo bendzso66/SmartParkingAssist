@@ -1,4 +1,4 @@
-package hu.bme.hit.smartparkingassist;
+package hu.bme.hit.smartparkingassist.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import hu.bme.hit.smartparkingassist.MainMenuAdapter;
+import hu.bme.hit.smartparkingassist.MainMenuItems;
 
 /**
  * A list fragment representing a list of Items. This fragment

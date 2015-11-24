@@ -1,4 +1,4 @@
-package hu.bme.hit.smartparkingassist;
+package hu.bme.hit.smartparkingassist.fragment;
 
 import android.app.Activity;
 import android.location.Geocoder;
@@ -14,6 +14,10 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
+import hu.bme.hit.smartparkingassist.MainMenuActivity;
+import hu.bme.hit.smartparkingassist.MainMenuItems;
+import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.communication.AccessServlet;
 
 /**

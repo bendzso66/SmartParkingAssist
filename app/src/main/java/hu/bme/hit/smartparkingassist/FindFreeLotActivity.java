@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
+
 /**
  * An activity representing a single Item detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
