@@ -47,6 +47,8 @@ public class MainMenuActivity extends AppCompatActivity
      */
     private boolean mTwoPane;
     Intent i = null;
+    Location currentLocation = null;
+    private static final int THREE_MINUTE = 3 * 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +64,22 @@ public class MainMenuActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                servlet.sendFreeLot(20, 19);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (currentLocation != null) {
+                    Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
+                    Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
+                    if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
+                        servlet.sendFreeLot(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        //TODO use broadcast to get if it was really successful
+                        Snackbar.make(view, "Sent was successful!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    } else {
+                        Snackbar.make(view, "Location data was too old. Please move your phone.", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                } else {
+                    Snackbar.make(view, "No location data was captured so far...", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -133,7 +148,7 @@ public class MainMenuActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Location currentLocation = intent.getParcelableExtra(LocationService.KEY_LOCATION);
+            currentLocation = intent.getParcelableExtra(LocationService.KEY_LOCATION);
 
             Log.d("[LOCATION] latitude: ", ((Double) currentLocation.getLatitude()).toString());
             Log.d("[LOCATION] longitude: ", ((Double) currentLocation.getLongitude()).toString());

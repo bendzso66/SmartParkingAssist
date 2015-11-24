@@ -190,7 +190,6 @@ public class AccessServlet {
                         }
                     });
                     e.printStackTrace();	// Logcat
-
                 }
 
                 // After succeed, display toast on the GUI thread (because of security)
