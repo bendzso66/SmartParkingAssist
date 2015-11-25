@@ -18,9 +18,6 @@ public class LocationService extends Service implements LocationListener {
     private LDLocationManager ldLocationManager = null;
     private boolean locationMonitorRunning = false;
 
-    private Location firstLocation = null;
-    private Location lastLocation = null;
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -29,8 +26,6 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        firstLocation = null;
-
         if (!locationMonitorRunning) {
             locationMonitorRunning = true;
             ldLocationManager = new LDLocationManager(getApplicationContext(), this);
@@ -50,11 +45,6 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        if (firstLocation == null) {
-            firstLocation = location;
-        }
-        lastLocation = location;
-
         Intent intent = new Intent(BR_NEW_LOCATION);
         intent.putExtra(KEY_LOCATION, location);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
