@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
@@ -76,13 +77,24 @@ public class FindFreeLotFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_find_free_lot, container, false);
 
         itemDescription = (TextView) rootView.findViewById(R.id.item_detail);
-        final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription);
-        Button btn = (Button) rootView.findViewById(R.id.find_free_lot_button);
+        Button findFreeLotButton = (Button) rootView.findViewById(R.id.find_free_lot_button);
+        Button viewAllOnMapButton = (Button) rootView.findViewById(R.id.view_all_on_map_button);
+        if (savedInstanceState == null) {
+            viewAllOnMapButton.setVisibility(View.INVISIBLE);
+        }
+
+        final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription, viewAllOnMapButton);
         final EditText address = (EditText) rootView.findViewById(R.id.get_address_field);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        findFreeLotButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 servlet.findFreeLotFromAddress(address.getText().toString());
+            }
+        });
+
+        viewAllOnMapButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Start map.", Toast.LENGTH_LONG).show();
             }
         });
 

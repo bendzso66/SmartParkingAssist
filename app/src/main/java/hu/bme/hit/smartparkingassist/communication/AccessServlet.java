@@ -3,6 +3,7 @@ package hu.bme.hit.smartparkingassist.communication;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class AccessServlet {
     //String apiurl = "http://192.168.1.4:4567/";
     Activity display;
     TextView view;
+    Button viewAllOnMapButton;
 
     public AccessServlet(Activity iDisplay) {
         display = iDisplay;
@@ -32,6 +34,12 @@ public class AccessServlet {
     public AccessServlet(Activity iDisplay, TextView iView) {
         display = iDisplay;
         view = iView;
+    }
+
+    public AccessServlet(Activity iDisplay, TextView iView, Button iViewAllOnMapButton) {
+        display = iDisplay;
+        view = iView;
+        viewAllOnMapButton = iViewAllOnMapButton;
     }
 
     public boolean findFreeLotFromAddress(String address) {
@@ -103,6 +111,7 @@ public class AccessServlet {
                         public void run() {
                             Toast.makeText(display, "Free lot was found.", Toast.LENGTH_LONG).show();
                             view.setText(result);
+                            viewAllOnMapButton.setVisibility(TextView.VISIBLE);
                         }
                     });
                 } catch (Exception e) {
