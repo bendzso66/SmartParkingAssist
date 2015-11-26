@@ -1,6 +1,7 @@
 package hu.bme.hit.smartparkingassist.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.MainMenuItems;
+import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.communication.AccessServlet;
 
@@ -95,6 +97,8 @@ public class FindFreeLotFragment extends Fragment {
         viewAllOnMapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Start map.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivity(intent);
             }
         });
 
