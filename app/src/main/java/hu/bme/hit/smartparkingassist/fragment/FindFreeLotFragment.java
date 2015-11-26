@@ -1,7 +1,6 @@
 package hu.bme.hit.smartparkingassist.fragment;
 
 import android.app.Activity;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
@@ -80,8 +77,6 @@ public class FindFreeLotFragment extends Fragment {
 
         itemDescription = (TextView) rootView.findViewById(R.id.item_detail);
         final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription);
-
-        final Geocoder geocoder = new Geocoder(this.getActivity(), Locale.ENGLISH);
         Button btn = (Button) rootView.findViewById(R.id.find_free_lot_button);
         final EditText address = (EditText) rootView.findViewById(R.id.get_address_field);
 
