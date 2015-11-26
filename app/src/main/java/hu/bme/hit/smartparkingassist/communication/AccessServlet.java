@@ -130,46 +130,6 @@ public class AccessServlet {
         return true; //new LatLng(lat, lon);
     }
 
-    public boolean findFreeLot(double lat, double lon) {
-        //String url = apiurl+"findFreeLot?lat="+lat+"&lon="+lon+"&id="+id+"&rad="+walkdist;
-        String url = apiurl+"findFreeLot?lat="+lat+"&lon="+lon;
-        new AsyncTask<Object, Void, Void>() {
-            private String url;
-
-            public AsyncTask<Object, Void, Void> setData(String curl) {
-                url = curl;
-
-                return this;
-            }
-
-            @Override
-            protected Void doInBackground(Object... param) {
-                try {
-                    Log.d("[Communicator]parameterezett url findFreelot-nal: ",url);
-                    final String ret = readUrl(url);
-                    Log.d("[Communicator]findFreelotra servertol kapott valasz: ",ret);
-                    display.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(display, "Free lot was found.", Toast.LENGTH_LONG).show();
-                            view.setText(ret);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    display.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(display, "Free lot finder error.", Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-                }
-
-                return null;
-            }
-        }.setData(url).execute();
-        return true; //new LatLng(lat, lon);
-    }
-
     public boolean sendFreeLot(double lat, double lon) {
         // Use asynctask to handle this in background - dont freeze the gui
         new AsyncTask<Object, Void, Void>() {
