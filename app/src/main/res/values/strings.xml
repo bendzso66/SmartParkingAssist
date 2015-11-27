@@ -7,4 +7,5 @@
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
         AIzaSyB1AzDVE9wb0KWMZ5SogkFZGs_cWM6DTt0
     </string>
+    <string name="server_ip_address">http://152.66.248.87:4567/</string>
 </resources>

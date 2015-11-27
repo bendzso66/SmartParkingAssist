@@ -16,7 +16,7 @@ import android.view.View;
 
 import java.util.Date;
 
-import hu.bme.hit.smartparkingassist.communication.AccessServlet;
+import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
 import hu.bme.hit.smartparkingassist.service.LocationService;
@@ -48,7 +48,7 @@ public class MainMenuActivity extends AppCompatActivity
     private boolean mTwoPane;
     Intent i = null;
     Location currentLocation = null;
-    private static final int THREE_MINUTE = 3 * 60;
+    private static final int THREE_MINUTE = 3 * 60 * 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class MainMenuActivity extends AppCompatActivity
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        final AccessServlet servlet = new AccessServlet(this);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,10 +67,7 @@ public class MainMenuActivity extends AppCompatActivity
                     Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
                     Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
                     if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
-                        servlet.sendFreeLot(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        //TODO use broadcast to get if it was really successful
-                        Snackbar.make(view, "Sent was successful!", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        new SendFreeLotTask(getApplicationContext()).execute(currentLocation.getLatitude(), currentLocation.getLongitude());
                     } else {
                         Snackbar.make(view, "Location data was too old. Please move your phone.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
@@ -132,9 +128,10 @@ public class MainMenuActivity extends AppCompatActivity
         super.onResume();
         i = new Intent(getApplicationContext(),LocationService.class);
         startService(i);
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver,
-                new IntentFilter(LocationService.BR_NEW_LOCATION));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LocationService.BR_NEW_LOCATION);
+        intentFilter.addAction(SendFreeLotTask.SEND_FREE_LOT_FILTER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
     }
 
     @Override
@@ -148,14 +145,19 @@ public class MainMenuActivity extends AppCompatActivity
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            currentLocation = intent.getParcelableExtra(LocationService.KEY_LOCATION);
-
-            Log.d("[LOCATION] latitude: ", ((Double) currentLocation.getLatitude()).toString());
-            Log.d("[LOCATION] longitude: ", ((Double) currentLocation.getLongitude()).toString());
-            Log.d("[LOCATION] altitude: ", ((Double) currentLocation.getAltitude()).toString());
-            Log.d("[LOCATION] speed: ", ((Float) currentLocation.getSpeed()).toString());
-            Log.d("[LOCATION] provider: ", currentLocation.getProvider());
-            Log.d("[LOCATION] time: ", new Date(currentLocation.getTime()).toString());
+            if (intent.getAction().equals(LocationService.BR_NEW_LOCATION)) {
+                currentLocation = intent.getParcelableExtra(LocationService.KEY_LOCATION);
+                Log.d("[LOCATION] latitude: ", ((Double) currentLocation.getLatitude()).toString());
+                Log.d("[LOCATION] longitude: ", ((Double) currentLocation.getLongitude()).toString());
+                Log.d("[LOCATION] altitude: ", ((Double) currentLocation.getAltitude()).toString());
+                Log.d("[LOCATION] speed: ", ((Float) currentLocation.getSpeed()).toString());
+                Log.d("[LOCATION] provider: ", currentLocation.getProvider());
+                Log.d("[LOCATION] time: ", new Date(currentLocation.getTime()).toString());
+            } else if (intent.getAction().equals(SendFreeLotTask.SEND_FREE_LOT_FILTER)) {
+                String result = intent.getStringExtra(SendFreeLotTask.SEND_FREE_LOT_RESULT_KEY);
+                Snackbar.make(findViewById(android.R.id.content).getRootView(), result, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         }
     };
 }

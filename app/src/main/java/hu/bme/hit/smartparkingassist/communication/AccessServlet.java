@@ -130,49 +130,6 @@ public class AccessServlet {
         return true; //new LatLng(lat, lon);
     }
 
-    public boolean sendFreeLot(double lat, double lon) {
-        // Use asynctask to handle this in background - dont freeze the gui
-        new AsyncTask<Object, Void, Void>() {
-            private double lat,lon;
-            private String url;
-
-            // Catch the parameters
-            public AsyncTask<Object, Void, Void> setData(String iurl, double ilat, double ilon) {
-                url = iurl;
-                lat = ilat;
-                lon = ilon;
-                return this;	// Return myself, for the simple syntax (.execute)
-            }
-
-            // Main task
-            @Override
-            protected Void doInBackground(Object... param) {
-                String ret = null;
-                try {
-                    // Log.d("smartparkingassist",url);
-                    ret = readUrl(url+"sendFreeLot?&lat="+lat+"&lon="+lon+"&avail=free&id=1");
-                    // Log.d("smartparkingassist", ret);
-                } catch (Exception e) {	// Handle exceptions, eg network error
-                    display.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(display, "Free lot sender error.", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    e.printStackTrace();	// Logcat
-                }
-
-                // After succeed, display toast on the GUI thread (because of security)
-                display.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(display, "Free lot sent", Toast.LENGTH_LONG).show();
-                    }
-                });
-                return null;
-            }
-        }.setData(apiurl, lat, lon).execute();	// Pass the parameters then run
-        return true;
-    }
-
     public static String readUrl(String mapsApiDirectionsUrl) throws Exception {
         String data = "";
         InputStream iStream = null;
