@@ -1,10 +1,16 @@
 package hu.bme.hit.smartparkingassist.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +24,7 @@ import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.MainMenuItems;
 import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
-import hu.bme.hit.smartparkingassist.communication.AccessServlet;
+import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -38,6 +44,12 @@ public class FindFreeLotFragment extends Fragment {
     private TextView itemDescription;
 
     private static MainMenuItems selectedItem;
+
+    private String findFreeLotResponse = null;
+
+    private View rootView;
+
+    private Button viewAllOnMapButton;
 
     public static FindFreeLotFragment newInstance(String itemDesc) {
         FindFreeLotFragment result = new FindFreeLotFragment();
@@ -76,21 +88,20 @@ public class FindFreeLotFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_find_free_lot, container, false);
+        rootView = inflater.inflate(R.layout.fragment_find_free_lot, container, false);
 
         itemDescription = (TextView) rootView.findViewById(R.id.item_detail);
         Button findFreeLotButton = (Button) rootView.findViewById(R.id.find_free_lot_button);
-        Button viewAllOnMapButton = (Button) rootView.findViewById(R.id.view_all_on_map_button);
+        viewAllOnMapButton = (Button) rootView.findViewById(R.id.view_all_on_map_button);
         if (savedInstanceState == null) {
             viewAllOnMapButton.setVisibility(View.INVISIBLE);
         }
 
-        final AccessServlet servlet = new AccessServlet(this.getActivity(), itemDescription, viewAllOnMapButton);
         final EditText address = (EditText) rootView.findViewById(R.id.get_address_field);
 
         findFreeLotButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                servlet.findFreeLotFromAddress(address.getText().toString());
+                new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString());
             }
         });
 
@@ -104,4 +115,31 @@ public class FindFreeLotFragment extends Fragment {
 
         return rootView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER);
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mMessageReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(mMessageReceiver);
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            findFreeLotResponse = intent.getStringExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_KEY);
+            Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            if (findFreeLotResponse.equals("Free lot was found.")) {
+                itemDescription.setText(findFreeLotResponse);
+                viewAllOnMapButton.setVisibility(TextView.VISIBLE);
+            }
+        }
+    };
 }
