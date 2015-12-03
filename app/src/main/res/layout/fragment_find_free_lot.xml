@@ -21,15 +21,11 @@
         android:clickable="true"
         android:textAllCaps="false" />
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/item_detail"
-        style="?android:attr/textAppearanceLarge"
+    <ListView
+        android:id="@+id/free_lot_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="0dp"
-        android:textIsSelectable="true"
-        tools:context=".FindFreeLotFragment" />
+        android:layout_height="wrap_content" >
+    </ListView>
 
     <Button
         android:text="@string/view_all_on_map"
