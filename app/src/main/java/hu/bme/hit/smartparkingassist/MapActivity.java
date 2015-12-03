@@ -3,13 +3,16 @@ package hu.bme.hit.smartparkingassist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -48,14 +51,23 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng coords = null;
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (int i = 0; i < freeLots.size(); i++) {
-            FreeLot freeLot = freeLots.get(i);
-            Double lat = freeLot.getLatitude();
-            Double lon = freeLot.getLongitude();
-            coords = new LatLng(lat, lon);
+            LatLng coords = new LatLng(freeLots.get(i).getLatitude(), freeLots.get(i).getLongitude());
             mMap.addMarker(new MarkerOptions().position(coords));
+            builder.include(coords);
         }
+
+        LatLngBounds bounds = builder.build();
+        int padding = 30; // offset from edges of the map in pixels
+        final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+                mMap.animateCamera(cu);
+            }
+        });
     }
 }
