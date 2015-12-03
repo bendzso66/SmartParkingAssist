@@ -114,6 +114,7 @@ public class FindFreeLotFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Start map.", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getActivity(), MapActivity.class);
+                intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLots);
                 startActivity(intent);
             }
         });
