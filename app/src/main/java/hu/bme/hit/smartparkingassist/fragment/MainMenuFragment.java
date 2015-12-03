@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import hu.bme.hit.smartparkingassist.MainMenuAdapter;
+import hu.bme.hit.smartparkingassist.adapters.MainMenuAdapter;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 
 /**
