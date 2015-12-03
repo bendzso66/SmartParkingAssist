@@ -15,10 +15,10 @@ public class FreeLotItem implements Parcelable {
     private Double distance;
 
     protected FreeLotItem(Parcel in) {
-        parkingLotAvailability = in.readString();
         address = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        distance = in.readDouble();
     }
 
     public static final Creator<FreeLotItem> CREATOR = new Creator<FreeLotItem>() {
@@ -184,9 +184,9 @@ public class FreeLotItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(parkingLotAvailability);
         dest.writeString(address);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(distance);
     }
 }
