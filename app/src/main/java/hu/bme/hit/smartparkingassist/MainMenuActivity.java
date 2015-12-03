@@ -19,6 +19,7 @@ import java.util.Date;
 import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
+import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
 
 

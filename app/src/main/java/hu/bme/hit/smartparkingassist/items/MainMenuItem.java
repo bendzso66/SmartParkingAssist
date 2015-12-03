@@ -1,4 +1,4 @@
-package hu.bme.hit.smartparkingassist;
+package hu.bme.hit.smartparkingassist.items;
 
 public class MainMenuItem {
     private String title;

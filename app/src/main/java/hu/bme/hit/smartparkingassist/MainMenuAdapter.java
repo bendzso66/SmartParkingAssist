@@ -10,6 +10,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import hu.bme.hit.smartparkingassist.items.MainMenuItem;
+
 public class MainMenuAdapter extends BaseAdapter {
 
     private final List<MainMenuItem> mainMenuItems;

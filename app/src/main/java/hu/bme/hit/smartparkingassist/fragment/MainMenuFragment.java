@@ -9,7 +9,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.MainMenuAdapter;
-import hu.bme.hit.smartparkingassist.MainMenuItem;
+import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 
 /**
  * A list fragment representing a list of Items. This fragment
