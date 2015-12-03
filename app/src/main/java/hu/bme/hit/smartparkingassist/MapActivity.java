@@ -63,9 +63,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         int padding = 30; // offset from edges of the map in pixels
         final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
-            public void onCameraChange(CameraPosition arg0) {
+            public void onMapLoaded() {
                 mMap.animateCamera(cu);
             }
         });
