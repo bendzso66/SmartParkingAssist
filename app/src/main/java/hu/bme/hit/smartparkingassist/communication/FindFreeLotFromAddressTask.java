@@ -3,7 +3,6 @@ package hu.bme.hit.smartparkingassist.communication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -16,7 +15,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.R;
-import hu.bme.hit.smartparkingassist.data.FreeLot;
+import hu.bme.hit.smartparkingassist.items.FreeLotItem;
 
 public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> {
 
@@ -24,7 +23,7 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
     public static final String FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY = "FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY";
     public static final String FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY = "FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY";
 
-    ArrayList<FreeLot> freeLots;
+    ArrayList<FreeLotItem> freeLotItems;
     private Context ctx;
 
     public FindFreeLotFromAddressTask(Context ctx) {
@@ -49,11 +48,11 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             JsonArray jArray = parser.parse(result).getAsJsonArray();
-            freeLots = new ArrayList<FreeLot>();
+            freeLotItems = new ArrayList<FreeLotItem>();
             for(JsonElement obj : jArray )
             {
-                FreeLot freeLot = gson.fromJson(obj, FreeLot.class);
-                freeLots.add(freeLot);
+                FreeLotItem freeLotItem = gson.fromJson(obj, FreeLotItem.class);
+                freeLotItems.add(freeLotItem);
             }
 
         } catch (Exception e) {
@@ -70,7 +69,7 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
         Intent intent = new Intent(FIND_FREE_LOT_FROM_ADDRESS_FILTER);
         intent.putExtra(FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY, result);
         if (result.equals("Free lot was found.")) {
-            intent.putParcelableArrayListExtra(FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLots);
+            intent.putParcelableArrayListExtra(FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLotItems);
         }
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
     }

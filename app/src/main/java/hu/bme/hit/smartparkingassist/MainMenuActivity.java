@@ -101,7 +101,7 @@ public class MainMenuActivity extends AppCompatActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(MainMenuItems aItem) {
+    public void onItemSelected(MainMenuItem aItem) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

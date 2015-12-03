@@ -9,7 +9,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.MainMenuAdapter;
-import hu.bme.hit.smartparkingassist.MainMenuItems;
+import hu.bme.hit.smartparkingassist.MainMenuItem;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -48,8 +48,8 @@ public class MainMenuFragment extends ListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        // public void onItemSelected(MainMenuItems selectedItem);
-        void onItemSelected(MainMenuItems aItem);
+        // public void onItemSelected(MainMenuItem selectedItem);
+        void onItemSelected(MainMenuItem aItem);
     }
 
     /**
@@ -63,10 +63,10 @@ public class MainMenuFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<MainMenuItems> items = new ArrayList<>();
-        items.add(new MainMenuItems("Find free lot"));
-        items.add(new MainMenuItems("Log in"));
-        items.add(new MainMenuItems("Registration"));
+        ArrayList<MainMenuItem> items = new ArrayList<>();
+        items.add(new MainMenuItem("Find free lot"));
+        items.add(new MainMenuItem("Log in"));
+        items.add(new MainMenuItem("Registration"));
         MainMenuAdapter mainMenuAdapter = new MainMenuAdapter(getActivity().getApplicationContext(), items);
         setListAdapter(mainMenuAdapter);
         setHasOptionsMenu(true);
@@ -107,7 +107,7 @@ public class MainMenuFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-        MainMenuItems selectedItem = (MainMenuItems) getListAdapter().getItem(position);
+        MainMenuItem selectedItem = (MainMenuItem) getListAdapter().getItem(position);
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         if(listener != null) {

@@ -12,9 +12,9 @@ import java.util.List;
 
 public class MainMenuAdapter extends BaseAdapter {
 
-    private final List<MainMenuItems> mainMenuItems;
+    private final List<MainMenuItem> mainMenuItems;
 
-    public MainMenuAdapter(final Context context, final ArrayList<MainMenuItems> aMainMenuItems) {
+    public MainMenuAdapter(final Context context, final ArrayList<MainMenuItem> aMainMenuItems) {
         mainMenuItems = aMainMenuItems;
     }
 
@@ -38,7 +38,7 @@ public class MainMenuAdapter extends BaseAdapter {
      */
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final MainMenuItems item = mainMenuItems.get(position);
+        final MainMenuItem item = mainMenuItems.get(position);
         View itemView = convertView;
         if (itemView == null) {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(

@@ -1,11 +1,9 @@
-package hu.bme.hit.smartparkingassist.data;
+package hu.bme.hit.smartparkingassist.items;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
-public class FreeLot implements Parcelable {
+public class FreeLotItem implements Parcelable {
 
     private Integer ID;
     private Integer gpsTime;
@@ -16,22 +14,22 @@ public class FreeLot implements Parcelable {
     private String address;
     private Double distance;
 
-    protected FreeLot(Parcel in) {
+    protected FreeLotItem(Parcel in) {
         parkingLotAvailability = in.readString();
         address = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
     }
 
-    public static final Creator<FreeLot> CREATOR = new Creator<FreeLot>() {
+    public static final Creator<FreeLotItem> CREATOR = new Creator<FreeLotItem>() {
         @Override
-        public FreeLot createFromParcel(Parcel in) {
-            return new FreeLot(in);
+        public FreeLotItem createFromParcel(Parcel in) {
+            return new FreeLotItem(in);
         }
 
         @Override
-        public FreeLot[] newArray(int size) {
-            return new FreeLot[size];
+        public FreeLotItem[] newArray(int size) {
+            return new FreeLotItem[size];
         }
     };
 

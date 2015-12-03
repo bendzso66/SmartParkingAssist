@@ -1,9 +1,9 @@
 package hu.bme.hit.smartparkingassist;
 
-public class MainMenuItems {
+public class MainMenuItem {
     private String title;
 
-    public MainMenuItems(String aTitle)
+    public MainMenuItem(String aTitle)
     {
         title = aTitle;
     }

@@ -10,24 +10,22 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
-import hu.bme.hit.smartparkingassist.MainMenuItems;
+import hu.bme.hit.smartparkingassist.MainMenuItem;
 import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
-import hu.bme.hit.smartparkingassist.data.FreeLot;
+import hu.bme.hit.smartparkingassist.items.FreeLotItem;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -46,7 +44,7 @@ public class FindFreeLotFragment extends Fragment {
 
     private TextView itemDescription;
 
-    private static MainMenuItems selectedItem;
+    private static MainMenuItem selectedItem;
 
     private String findFreeLotResponse = null;
 
@@ -54,7 +52,7 @@ public class FindFreeLotFragment extends Fragment {
 
     private Button viewAllOnMapButton;
 
-    public static ArrayList<FreeLot> freeLots = new ArrayList<FreeLot>();
+    public static ArrayList<FreeLotItem> freeLotItems = new ArrayList<FreeLotItem>();
 
     public static FindFreeLotFragment newInstance(String itemDesc) {
         FindFreeLotFragment result = new FindFreeLotFragment();
@@ -79,7 +77,7 @@ public class FindFreeLotFragment extends Fragment {
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                selectedItem = new MainMenuItems(getArguments().getString(KEY_TITLE_DESCRIPTION_QUERY));
+                selectedItem = new MainMenuItem(getArguments().getString(KEY_TITLE_DESCRIPTION_QUERY));
 
                 Activity activity = this.getActivity();
                 CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -113,7 +111,7 @@ public class FindFreeLotFragment extends Fragment {
         viewAllOnMapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MapActivity.class);
-                intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLots);
+                intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLotItems);
                 startActivity(intent);
             }
         });
@@ -143,10 +141,10 @@ public class FindFreeLotFragment extends Fragment {
                     .setAction("Action", null).show();
             if (findFreeLotResponse.equals("Free lot was found.")) {
                 String address = "";
-                freeLots = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
+                freeLotItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
 
-                for (int i = 0; i < freeLots.size(); i++) {
-                    address += freeLots.get(i).getAddress() + "\n";
+                for (int i = 0; i < freeLotItems.size(); i++) {
+                    address += freeLotItems.get(i).getAddress() + "\n";
                 }
 
                 itemDescription.setText(address);

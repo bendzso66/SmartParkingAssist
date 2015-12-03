@@ -9,21 +9,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
-import hu.bme.hit.smartparkingassist.data.FreeLot;
+import hu.bme.hit.smartparkingassist.items.FreeLotItem;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    public static ArrayList<FreeLot> freeLots = new ArrayList<FreeLot>();
+    public static ArrayList<FreeLotItem> freeLotItems = new ArrayList<FreeLotItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
         Intent intent = getIntent();
-        freeLots = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
+        freeLotItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
     }
 
 
@@ -53,8 +51,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        for (int i = 0; i < freeLots.size(); i++) {
-            LatLng coords = new LatLng(freeLots.get(i).getLatitude(), freeLots.get(i).getLongitude());
+        for (int i = 0; i < freeLotItems.size(); i++) {
+            LatLng coords = new LatLng(freeLotItems.get(i).getLatitude(), freeLotItems.get(i).getLongitude());
             mMap.addMarker(new MarkerOptions().position(coords));
             builder.include(coords);
         }
