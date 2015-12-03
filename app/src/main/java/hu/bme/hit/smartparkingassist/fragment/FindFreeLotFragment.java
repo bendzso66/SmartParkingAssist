@@ -143,8 +143,14 @@ public class FindFreeLotFragment extends Fragment {
             Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             if (findFreeLotResponse.equals("Free lot was found.")) {
+                String address = "";
                 freeLots = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
-                itemDescription.setText(findFreeLotResponse);
+
+                for (int i = 0; i < freeLots.size(); i++) {
+                    address += freeLots.get(i).getAddress() + "\n";
+                }
+
+                itemDescription.setText(address);
                 viewAllOnMapButton.setVisibility(TextView.VISIBLE);
             }
         }
