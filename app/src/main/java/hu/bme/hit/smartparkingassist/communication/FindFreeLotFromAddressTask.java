@@ -3,21 +3,28 @@ package hu.bme.hit.smartparkingassist.communication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.R;
+import hu.bme.hit.smartparkingassist.data.FreeLot;
 
 public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> {
 
     public static final String FIND_FREE_LOT_FROM_ADDRESS_FILTER = "FIND_FREE_LOT_FROM_ADDRESS_FILTER";
-    public static final String FIND_FREE_LOT_FROM_ADDRESS_KEY = "FIND_FREE_LOT_FROM_ADDRESS_KEY";
+    public static final String FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY = "FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY";
+    public static final String FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY = "FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY";
+
+    ArrayList<FreeLot> freeLots;
     private Context ctx;
 
     public FindFreeLotFromAddressTask(Context ctx) {
@@ -31,31 +38,22 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
             String address = params[0];
             String url = serverIpAddress+"findFreeLotFromAddress?address=Budapest+" + URLEncoder.encode(address, "UTF-8");
             Log.d("[Communicator]parameterezett url findFreelot-nal: ", url);
-            final String freeLots = AccessServlet.readUrl(url);
-            Log.d("[Communicator]findFreelotra servertol kapott valasz: ",freeLots);
+            final String result = AccessServlet.readUrl(url);
+            Log.d("[Communicator]findFreelotra servertol kapott valasz: ",result);
 
-            JSONArray jArray = null;
-            if(freeLots == null || freeLots.equalsIgnoreCase("[]") || freeLots.equalsIgnoreCase("UNSUCCESSFULL_REQUEST") ) {
+            if(result == null || result.equalsIgnoreCase("[]") || result.equalsIgnoreCase("UNSUCCESSFULL_REQUEST") ) {
                 Log.d("mylog", "Empty array, returning");
                 return "No Places Available";
             }
-            try {
-                jArray = new JSONArray(freeLots);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return "Unexpected response from the server";
-            }
 
-            String addresses = "";
-
-            for (int i = 0; i < jArray.length(); i++) {
-                try {
-                    JSONObject curr = jArray.getJSONObject(i);
-                    addresses += curr.getString("address") + "\n";
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return "Unexpected response from the server";
-                }
+            Gson gson = new Gson();
+            JsonParser parser = new JsonParser();
+            JsonArray jArray = parser.parse(result).getAsJsonArray();
+            freeLots = new ArrayList<FreeLot>();
+            for(JsonElement obj : jArray )
+            {
+                FreeLot freeLot = gson.fromJson(obj, FreeLot.class);
+                freeLots.add(freeLot);
             }
 
         } catch (Exception e) {
@@ -70,7 +68,10 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
     protected void onPostExecute(String result) {
         Log.d("[SendFreeLot]", result);
         Intent intent = new Intent(FIND_FREE_LOT_FROM_ADDRESS_FILTER);
-        intent.putExtra(FIND_FREE_LOT_FROM_ADDRESS_KEY, result);
+        intent.putExtra(FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY, result);
+        if (result.equals("Free lot was found.")) {
+            intent.putParcelableArrayListExtra(FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLots);
+        }
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
     }
 }

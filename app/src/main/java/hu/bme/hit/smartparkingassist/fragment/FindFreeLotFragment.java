@@ -19,12 +19,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.MainMenuItems;
 import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
+import hu.bme.hit.smartparkingassist.data.FreeLot;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -50,6 +53,8 @@ public class FindFreeLotFragment extends Fragment {
     private View rootView;
 
     private Button viewAllOnMapButton;
+
+    public static ArrayList<FreeLot> freeLots = new ArrayList<FreeLot>();
 
     public static FindFreeLotFragment newInstance(String itemDesc) {
         FindFreeLotFragment result = new FindFreeLotFragment();
@@ -133,10 +138,11 @@ public class FindFreeLotFragment extends Fragment {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            findFreeLotResponse = intent.getStringExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_KEY);
+            findFreeLotResponse = intent.getStringExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY);
             Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             if (findFreeLotResponse.equals("Free lot was found.")) {
+                freeLots = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
                 itemDescription.setText(findFreeLotResponse);
                 viewAllOnMapButton.setVisibility(TextView.VISIBLE);
             }
