@@ -6,17 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import hu.bme.hit.smartparkingassist.R;
-import hu.bme.hit.smartparkingassist.Utility;
 import hu.bme.hit.smartparkingassist.items.FreeLotItem;
-import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 
-public class FreeLotAdapter extends BaseAdapter {
+public class FreeLotAdapter extends BaseAdapter implements View.OnClickListener {
 
     private final List<FreeLotItem> freeLotItems;
 
@@ -42,7 +42,7 @@ public class FreeLotAdapter extends BaseAdapter {
     /**
      * Sor megjelenítésének beállítása
      */
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         final FreeLotItem item = freeLotItems.get(position);
         View itemView = convertView;
@@ -59,6 +59,26 @@ public class FreeLotAdapter extends BaseAdapter {
         Integer distance = (int) Math.floor(item.getDistance() * 1000 + 0.5d);
         distanceTextView.setText("Walk distance: " + distance.toString() + " m");
 
+        ImageButton showFreeLotOnMapBtn = ((ImageButton) itemView.findViewById(R.id.show_free_lot));
+        showFreeLotOnMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("showFreeLotOnMapBtn", ((Integer) position).toString());
+            }
+        });
+
+        ImageButton navigateToFreeBtn = ((ImageButton) itemView.findViewById(R.id.navigate_free_lot));
+        navigateToFreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("navigateToFreeBtn", ((Integer) position).toString());
+            }
+        });
+
         return itemView;
+    }
+
+    @Override
+    public void onClick(View v) {
     }
 }
