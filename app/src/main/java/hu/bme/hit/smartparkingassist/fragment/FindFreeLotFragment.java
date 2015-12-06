@@ -10,11 +10,13 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +28,6 @@ import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.Utility;
 import hu.bme.hit.smartparkingassist.adapters.FreeLotAdapter;
-import hu.bme.hit.smartparkingassist.adapters.MainMenuAdapter;
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
 import hu.bme.hit.smartparkingassist.items.FreeLotItem;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
@@ -101,7 +102,7 @@ public class FindFreeLotFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_find_free_lot, container, false);
 
         freeLotListView = (ListView) rootView.findViewById(R.id.free_lot_list);
-        Button findFreeLotButton = (Button) rootView.findViewById(R.id.find_free_lot_button);
+        ImageButton findFreeLotButton = (ImageButton) rootView.findViewById(R.id.find_free_lot_button);
         viewAllOnMapButton = (Button) rootView.findViewById(R.id.view_all_on_map_button);
         if (savedInstanceState == null) {
             viewAllOnMapButton.setVisibility(View.INVISIBLE);
