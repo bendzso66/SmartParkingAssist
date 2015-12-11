@@ -1,7 +1,11 @@
 package hu.bme.hit.smartparkingassist;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -11,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
+import hu.bme.hit.smartparkingassist.service.LocationService;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -22,6 +27,10 @@ import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
  * more than a {@link FindFreeLotFragment}.
  */
 public class FindFreeLotActivity extends AppCompatActivity {
+
+    Intent i = null;
+    LocationService myLocationService;
+    boolean isBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,13 @@ public class FindFreeLotActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        i = new Intent(getApplicationContext(),LocationService.class);
+        bindService(i, locationServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -69,4 +85,26 @@ public class FindFreeLotActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unbindService(locationServiceConnection);
+        isBound = false;
+    }
+
+    private ServiceConnection locationServiceConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            LocationService.LocationBinder binder = (LocationService.LocationBinder) service;
+            myLocationService = binder.getService();
+            isBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+
+    };
 }
