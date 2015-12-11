@@ -1,11 +1,14 @@
 package hu.bme.hit.smartparkingassist;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,6 +53,8 @@ public class MainMenuActivity extends AppCompatActivity
     Intent i = null;
     Location currentLocation = null;
     private static final int THREE_MINUTE = 3 * 60 * 1000;
+    LocationService myLocationService;
+    boolean isBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,13 @@ public class MainMenuActivity extends AppCompatActivity
         // TODO: If exposing deep links into your app, handle intents here.
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        i = new Intent(getApplicationContext(),LocationService.class);
+        bindService(i, locationServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
     /**
      * Callback method from {@link MainMenuFragment.IMainMenuFragment}
      * indicating that the item with the given ID was selected.
@@ -127,8 +139,6 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        i = new Intent(getApplicationContext(),LocationService.class);
-        startService(i);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationService.BR_NEW_LOCATION);
         intentFilter.addAction(SendFreeLotTask.SEND_FREE_LOT_FILTER);
@@ -138,9 +148,15 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
-        stopService(i);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mMessageReceiver);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unbindService(locationServiceConnection);
+        isBound = false;
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -160,5 +176,20 @@ public class MainMenuActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         }
+    };
+
+    private ServiceConnection locationServiceConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            LocationService.LocationBinder binder = (LocationService.LocationBinder) service;
+            myLocationService = binder.getService();
+            isBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+
     };
 }
