@@ -1,5 +1,6 @@
 package hu.bme.hit.smartparkingassist;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -115,24 +117,40 @@ public class MainMenuActivity extends AppCompatActivity
      */
     @Override
     public void onItemSelected(MainMenuItem aItem) {
+
+        String selectedItemTitle = aItem.getTitle();
+
         if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            // Bundle arguments = new Bundle();
-            // arguments.putString(FindFreeLotFragment.ARG_ITEM_ID, id);
-            FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(aItem.getTitle());
-            // fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.find_free_lot_container, fragment)
-                    .commit();
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            if (selectedItemTitle.equals("Find free lot")) {
+                FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(aItem.getTitle());
+                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
+            } else if (selectedItemTitle.equals("Log in")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            } else if (selectedItemTitle.equals("Registration")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            } else if (selectedItemTitle.equals("Settings")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            }
+
+            fragmentTransaction.commit();
 
         } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, FindFreeLotActivity.class);
-            detailIntent.putExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
-            startActivity(detailIntent);
+
+            if (selectedItemTitle.equals("Find free lot")) {
+                Intent detailIntent = new Intent(this, FindFreeLotActivity.class);
+                detailIntent.putExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
+                startActivity(detailIntent);
+            } else if (selectedItemTitle.equals("Log in")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            } else if (selectedItemTitle.equals("Registration")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            } else if (selectedItemTitle.equals("Settings")) {
+                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
