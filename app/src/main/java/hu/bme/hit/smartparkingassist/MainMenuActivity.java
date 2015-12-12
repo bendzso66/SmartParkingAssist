@@ -24,6 +24,7 @@ import java.util.Date;
 import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
+import hu.bme.hit.smartparkingassist.fragment.SettingsFragment;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
 
@@ -132,7 +133,8 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Registration")) {
                 Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
             } else if (selectedItemTitle.equals("Settings")) {
-                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+                SettingsFragment fragment = new SettingsFragment();
+                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
             }
 
             fragmentTransaction.commit();
@@ -148,7 +150,8 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Registration")) {
                 Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
             } else if (selectedItemTitle.equals("Settings")) {
-                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+                Intent detailIntent = new Intent(this, SettingsActivity.class);
+                startActivity(detailIntent);
             }
 
         }

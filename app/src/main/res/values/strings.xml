@@ -8,4 +8,8 @@
         AIzaSyB1AzDVE9wb0KWMZ5SogkFZGs_cWM6DTt0
     </string>
     <string name="server_ip_address">http://152.66.248.87:4567/</string>
+    <string name="title_activity_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
