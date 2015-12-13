@@ -25,6 +25,7 @@ import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.LogInFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
+import hu.bme.hit.smartparkingassist.fragment.RegistrationFragment;
 import hu.bme.hit.smartparkingassist.fragment.SettingsFragment;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
@@ -133,7 +134,8 @@ public class MainMenuActivity extends AppCompatActivity
                 LogInFragment fragment = new LogInFragment();
                 fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
             } else if (selectedItemTitle.equals("Registration")) {
-                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+                RegistrationFragment fragment = new RegistrationFragment();
+                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
@@ -151,7 +153,8 @@ public class MainMenuActivity extends AppCompatActivity
                 Intent detailIntent = new Intent(this, LogInActivity.class);
                 startActivity(detailIntent);
             } else if (selectedItemTitle.equals("Registration")) {
-                Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
+                Intent detailIntent = new Intent(this, RegistrationActivity.class);
+                startActivity(detailIntent);
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
