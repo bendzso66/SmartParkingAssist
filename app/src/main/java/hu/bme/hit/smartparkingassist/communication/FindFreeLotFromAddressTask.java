@@ -35,7 +35,13 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
         try {
             String serverIpAddress = ctx.getResources().getString(R.string.server_ip_address);
             String address = params[0];
-            String url = serverIpAddress+"findFreeLotFromAddress?address=Budapest+" + URLEncoder.encode(address, "UTF-8");
+            String distanceInMeter = params[1];
+            Double distanceInKilometer = Double.parseDouble(distanceInMeter) / 1000;
+            String url = serverIpAddress +
+                        "findFreeLotFromAddress?address=Budapest+" +
+                        URLEncoder.encode(address, "UTF-8") +
+                        "&rad=" +
+                        distanceInKilometer.toString();
             Log.d("[Communicator]parameterezett url findFreelot-nal: ", url);
             final String result = AccessServlet.readUrl(url);
             Log.d("[Communicator]findFreelotra servertol kapott valasz: ",result);

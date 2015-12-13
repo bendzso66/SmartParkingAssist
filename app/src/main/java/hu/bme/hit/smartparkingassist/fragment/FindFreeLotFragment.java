@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -117,7 +119,10 @@ public class FindFreeLotFragment extends Fragment {
 
         findFreeLotButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString());
+                SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String distanceInMeter = myPrefs.getString("max_walk_distance_preference", "500");
+                Log.d("ASDASD", distanceInMeter);
+                new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString(), distanceInMeter);
             }
         });
 
