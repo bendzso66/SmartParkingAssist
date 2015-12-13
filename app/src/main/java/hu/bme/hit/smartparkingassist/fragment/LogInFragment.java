@@ -5,18 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.Utility;
@@ -27,6 +29,7 @@ import hu.bme.hit.smartparkingassist.communication.LogInTask;
 public class LogInFragment extends Fragment {
 
     private View rootView;
+    private final String SESSION_ID_PREF_KEY = "SESSION_ID_PREF_KEY";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,8 +44,6 @@ public class LogInFragment extends Fragment {
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("ASDASD", mail.getText().toString());
-                Log.d("ASDASD", password.getText().toString());
                 new LogInTask(getActivity()).execute(mail.getText().toString(), password.getText().toString());
             }
         });
@@ -72,6 +73,11 @@ public class LogInFragment extends Fragment {
             if (result.equals("Got result.")) {
                 Snackbar.make(rootView, "Result is: " + sessionId, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                SharedPreferences sp = getActivity().getSharedPreferences(SESSION_ID_PREF_KEY, getActivity().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("LAST_SESSION_ID", sessionId);
+                editor.commit();
             } else {
                 Snackbar.make(rootView, result, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

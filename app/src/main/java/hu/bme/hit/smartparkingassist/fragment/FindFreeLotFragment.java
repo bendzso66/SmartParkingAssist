@@ -12,7 +12,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,8 +120,14 @@ public class FindFreeLotFragment extends Fragment {
             public void onClick(View v) {
                 SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String distanceInMeter = myPrefs.getString("max_walk_distance_preference", "500");
-                Log.d("ASDASD", distanceInMeter);
-                new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString(), distanceInMeter);
+                SharedPreferences sp =
+                        getActivity().getSharedPreferences("SESSION_ID_PREF_KEY", getActivity().MODE_PRIVATE);
+                String sessionId = sp.getString("LAST_SESSION_ID", "NaN");
+                if (sessionId.equals("NaN")) {
+                    new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString(), distanceInMeter);
+                } else {
+                    new FindFreeLotFromAddressTask(getActivity()).execute(address.getText().toString(), distanceInMeter, sessionId);
+                }
             }
         });
 

@@ -42,6 +42,10 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
                         URLEncoder.encode(address, "UTF-8") +
                         "&rad=" +
                         distanceInKilometer.toString();
+            if (params.length == 3) {
+                String sessionId = params[2];
+                url += "&id=" + sessionId;
+            }
             Log.d("[Communicator]parameterezett url findFreelot-nal: ", url);
             final String result = AccessServlet.readUrl(url);
             Log.d("[Communicator]findFreelotra servertol kapott valasz: ",result);
