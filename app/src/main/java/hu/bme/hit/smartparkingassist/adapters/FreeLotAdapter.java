@@ -76,14 +76,6 @@ public class FreeLotAdapter extends BaseAdapter implements View.OnClickListener 
             }
         });
 
-        ImageButton navigateToFreeBtn = ((ImageButton) itemView.findViewById(R.id.navigate_free_lot));
-        navigateToFreeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("navigateToFreeBtn", ((Integer) position).toString());
-            }
-        });
-
         return itemView;
     }
 
