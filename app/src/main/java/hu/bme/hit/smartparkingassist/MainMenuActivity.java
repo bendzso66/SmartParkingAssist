@@ -133,8 +133,8 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Registration")) {
                 Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_LONG).show();
             } else if (selectedItemTitle.equals("Settings")) {
-                SettingsFragment fragment = new SettingsFragment();
-                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
+                Intent detailIntent = new Intent(this, SettingsActivity.class);
+                startActivity(detailIntent);
             }
 
             fragmentTransaction.commit();

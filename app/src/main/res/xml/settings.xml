@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <EditTextPreference
+        android:key="max_walk_distance_preference"
+        android:title="Max walk distance"
+        android:summary="Set maximum walk distance in meter"
+        android:inputType="number" />
+
+    <Preference xmlns:android="http://schemas.android.com/apk/res/android"
+        android:key="pref_key_gpsStatus"
+        android:title="Gps Settings" >
+
+        <intent android:action="android.settings.LOCATION_SOURCE_SETTINGS"/>
+
+    </Preference>
+
+</PreferenceScreen>
