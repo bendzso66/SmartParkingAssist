@@ -27,7 +27,6 @@ public class LogInTask extends AsyncTask<String, Void, String> {
             String serverIpAddress = ctx.getResources().getString(R.string.server_ip_address);
             String mail = params[0];
             String password = params[1];
-            //TODO check the returned parameter of readUrl
             sessionId = AccessServlet.readUrl(serverIpAddress+"login?&mail="+mail+"&pass="+password);
         } catch (Exception e) {
             e.printStackTrace();

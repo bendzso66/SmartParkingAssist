@@ -3,8 +3,42 @@
     android:layout_height="match_parent"
     tools:context="hu.bme.hit.smartparkingassist.fragment.RegistrationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Dummy content" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/get_email_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e-mail address" />
+
+        <EditText
+            android:id="@+id/get_password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Add password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/get_password_check_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Add password again"
+            android:inputType="textPassword" />
+
+        <Button
+            android:text="Registrate"
+            android:id="@+id/registration_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
 
 </FrameLayout>
