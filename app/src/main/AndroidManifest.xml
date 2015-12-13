@@ -52,6 +52,11 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".LogInActivity"
+            android:label="@string/title_activity_log_in"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
