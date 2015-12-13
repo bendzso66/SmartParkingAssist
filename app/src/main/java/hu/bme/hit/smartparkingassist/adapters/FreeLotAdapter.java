@@ -1,6 +1,8 @@
 package hu.bme.hit.smartparkingassist.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +21,13 @@ import hu.bme.hit.smartparkingassist.items.FreeLotItem;
 public class FreeLotAdapter extends BaseAdapter implements View.OnClickListener {
 
     private final List<FreeLotItem> freeLotItems;
+    private Context context;
 
-    public FreeLotAdapter(final Context context, final ArrayList<FreeLotItem> aFreeLotItems) {
+    public static final String SHOW_A_FREE_LOT_FILTER = "SHOW_A_FREE_LOT_FILTER";
+    public static final String FREE_LOT_FILTER_POSITION_KEY = "FREE_LOT_FILTER_POSITION_KEY";
+
+    public FreeLotAdapter(final Context aContext, final ArrayList<FreeLotItem> aFreeLotItems) {
+        context = aContext;
         freeLotItems = aFreeLotItems;
     }
 
@@ -63,7 +70,9 @@ public class FreeLotAdapter extends BaseAdapter implements View.OnClickListener 
         showFreeLotOnMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("showFreeLotOnMapBtn", ((Integer) position).toString());
+                Intent intent = new Intent(SHOW_A_FREE_LOT_FILTER);
+                intent.putExtra(FREE_LOT_FILTER_POSITION_KEY, position);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             }
         });
 

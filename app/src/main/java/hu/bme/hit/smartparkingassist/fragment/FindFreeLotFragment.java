@@ -147,6 +147,7 @@ public class FindFreeLotFragment extends Fragment {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER);
+        intentFilter.addAction(FreeLotAdapter.SHOW_A_FREE_LOT_FILTER);
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -166,18 +167,28 @@ public class FindFreeLotFragment extends Fragment {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            findFreeLotResponse = intent.getStringExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY);
-            Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            if (findFreeLotResponse.equals("Free lot was found.")) {
-                freeLotItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
+            if (intent.getAction().equals(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER)) {
+                findFreeLotResponse = intent.getStringExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY);
+                Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                if (findFreeLotResponse.equals("Free lot was found.")) {
+                    freeLotItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
 
-                freeLotAdapter = new FreeLotAdapter(getActivity().getApplicationContext(), freeLotItems);
-                freeLotListView.setAdapter(freeLotAdapter);
-                Utility.setListViewHeightBasedOnChildren(freeLotListView);
+                    freeLotAdapter = new FreeLotAdapter(getActivity().getApplicationContext(), freeLotItems);
+                    freeLotListView.setAdapter(freeLotAdapter);
+                    Utility.setListViewHeightBasedOnChildren(freeLotListView);
 
-                viewAllOnMapButton.setVisibility(TextView.VISIBLE);
+                    viewAllOnMapButton.setVisibility(TextView.VISIBLE);
+                }
+            } else if (intent.getAction().equals(FreeLotAdapter.SHOW_A_FREE_LOT_FILTER)) {
+                int position = intent.getIntExtra(FreeLotAdapter.FREE_LOT_FILTER_POSITION_KEY, 0);
+                ArrayList<FreeLotItem> aFreeLotItem = new ArrayList<FreeLotItem>();
+                aFreeLotItem.add(freeLotItems.get(position));
+                Intent intentForMap = new Intent(getActivity(), MapActivity.class);
+                intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aFreeLotItem);
+                startActivity(intentForMap);
             }
         }
     };
+
 }
