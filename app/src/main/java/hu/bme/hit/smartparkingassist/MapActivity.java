@@ -16,12 +16,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
-import hu.bme.hit.smartparkingassist.items.FreeLotItem;
+import hu.bme.hit.smartparkingassist.items.WayItem;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    public static ArrayList<FreeLotItem> freeLotItems = new ArrayList<FreeLotItem>();
+    public static ArrayList<WayItem> freeLotItems = new ArrayList<WayItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (int i = 0; i < freeLotItems.size(); i++) {
-            LatLng coords = new LatLng(freeLotItems.get(i).getLatitude(), freeLotItems.get(i).getLongitude());
+            LatLng coords = new LatLng(freeLotItems.get(i).getLatitude1(), freeLotItems.get(i).getLongitude1());
             mMap.addMarker(new MarkerOptions().position(coords));
             builder.include(coords);
         }

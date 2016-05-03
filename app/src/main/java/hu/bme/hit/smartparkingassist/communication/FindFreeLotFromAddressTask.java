@@ -15,7 +15,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.R;
-import hu.bme.hit.smartparkingassist.items.FreeLotItem;
+import hu.bme.hit.smartparkingassist.items.WayItem;
 
 public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> {
 
@@ -23,7 +23,7 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
     public static final String FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY = "FIND_FREE_LOT_FROM_ADDRESS_RESULT_KEY";
     public static final String FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY = "FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY";
 
-    ArrayList<FreeLotItem> freeLotItems;
+    ArrayList<WayItem> freeLotItems;
     private Context ctx;
 
     public FindFreeLotFromAddressTask(Context ctx) {
@@ -36,12 +36,11 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
             String serverIpAddress = ctx.getResources().getString(R.string.server_ip_address);
             String address = params[0];
             String distanceInMeter = params[1];
-            Double distanceInKilometer = Double.parseDouble(distanceInMeter) / 1000;
-            String url = serverIpAddress +
-                        "findFreeLotFromAddress?address=Budapest+" +
-                        URLEncoder.encode(address, "UTF-8") +
-                        "&rad=" +
-                        distanceInKilometer.toString();
+            String url = serverIpAddress
+                        + "findFreeLotFromAddress?address=Budapest+"
+                        + URLEncoder.encode(address, "UTF-8")
+                        + "&rad="
+                        + distanceInMeter.toString();
             if (params.length == 3) {
                 String sessionId = params[2];
                 url += "&id=" + sessionId;
@@ -58,10 +57,10 @@ public class FindFreeLotFromAddressTask extends AsyncTask<String, Void, String> 
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             JsonArray jArray = parser.parse(result).getAsJsonArray();
-            freeLotItems = new ArrayList<FreeLotItem>();
+            freeLotItems = new ArrayList<WayItem>();
             for(JsonElement obj : jArray )
             {
-                FreeLotItem freeLotItem = gson.fromJson(obj, FreeLotItem.class);
+                WayItem freeLotItem = gson.fromJson(obj, WayItem.class);
                 freeLotItems.add(freeLotItem);
             }
 

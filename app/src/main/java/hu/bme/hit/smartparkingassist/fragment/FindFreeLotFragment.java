@@ -28,9 +28,9 @@ import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.Utility;
-import hu.bme.hit.smartparkingassist.adapters.FreeLotAdapter;
+import hu.bme.hit.smartparkingassist.adapters.WayAdapter;
 import hu.bme.hit.smartparkingassist.communication.FindFreeLotFromAddressTask;
-import hu.bme.hit.smartparkingassist.items.FreeLotItem;
+import hu.bme.hit.smartparkingassist.items.WayItem;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 
 /**
@@ -56,11 +56,11 @@ public class FindFreeLotFragment extends Fragment {
 
     private Button viewAllOnMapButton;
 
-    public static ArrayList<FreeLotItem> freeLotItems = new ArrayList<FreeLotItem>();
+    public static ArrayList<WayItem> wayItems = new ArrayList<WayItem>();
 
     private ListView freeLotListView;
 
-    private FreeLotAdapter freeLotAdapter = null;
+    private WayAdapter freeLotAdapter = null;
 
     private String SAVE_FREE_LOT_ITEMS_KEY = "SAVE_FREE_LOT_ITEMS_KEY";
 
@@ -108,8 +108,8 @@ public class FindFreeLotFragment extends Fragment {
         if (savedInstanceState == null) {
             viewAllOnMapButton.setVisibility(View.INVISIBLE);
         } else {
-            freeLotItems = savedInstanceState.getParcelableArrayList(SAVE_FREE_LOT_ITEMS_KEY);
-            freeLotAdapter = new FreeLotAdapter(getActivity().getApplicationContext(), freeLotItems);
+            wayItems = savedInstanceState.getParcelableArrayList(SAVE_FREE_LOT_ITEMS_KEY);
+            freeLotAdapter = new WayAdapter(getActivity().getApplicationContext(), wayItems);
             freeLotListView.setAdapter(freeLotAdapter);
             Utility.setListViewHeightBasedOnChildren(freeLotListView);
         }
@@ -134,7 +134,7 @@ public class FindFreeLotFragment extends Fragment {
         viewAllOnMapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MapActivity.class);
-                intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, freeLotItems);
+                intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, wayItems);
                 startActivity(intent);
             }
         });
@@ -147,7 +147,7 @@ public class FindFreeLotFragment extends Fragment {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER);
-        intentFilter.addAction(FreeLotAdapter.SHOW_A_FREE_LOT_FILTER);
+        intentFilter.addAction(WayAdapter.SHOW_A_WAY_FILTER);
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -161,7 +161,7 @@ public class FindFreeLotFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_FREE_LOT_ITEMS_KEY, freeLotItems);
+        outState.putParcelableArrayList(SAVE_FREE_LOT_ITEMS_KEY, wayItems);
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -172,18 +172,18 @@ public class FindFreeLotFragment extends Fragment {
                 Snackbar.make(rootView, findFreeLotResponse, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 if (findFreeLotResponse.equals("Free lot was found.")) {
-                    freeLotItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
+                    wayItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
 
-                    freeLotAdapter = new FreeLotAdapter(getActivity().getApplicationContext(), freeLotItems);
+                    freeLotAdapter = new WayAdapter(getActivity().getApplicationContext(), wayItems);
                     freeLotListView.setAdapter(freeLotAdapter);
                     Utility.setListViewHeightBasedOnChildren(freeLotListView);
 
                     viewAllOnMapButton.setVisibility(TextView.VISIBLE);
                 }
-            } else if (intent.getAction().equals(FreeLotAdapter.SHOW_A_FREE_LOT_FILTER)) {
-                int position = intent.getIntExtra(FreeLotAdapter.FREE_LOT_FILTER_POSITION_KEY, 0);
-                ArrayList<FreeLotItem> aFreeLotItem = new ArrayList<FreeLotItem>();
-                aFreeLotItem.add(freeLotItems.get(position));
+            } else if (intent.getAction().equals(WayAdapter.SHOW_A_WAY_FILTER)) {
+                int position = intent.getIntExtra(WayAdapter.WAY_FILTER_POSITION_KEY, 0);
+                ArrayList<WayItem> aFreeLotItem = new ArrayList<WayItem>();
+                aFreeLotItem.add(wayItems.get(position));
                 Intent intentForMap = new Intent(getActivity(), MapActivity.class);
                 intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aFreeLotItem);
                 startActivity(intentForMap);
