@@ -25,7 +25,7 @@ public class SendFreeLotTask extends AsyncTask<Double, Void, String> {
             String lat = params[0].toString();
             String lon = params[1].toString();
             //TODO check the returned parameter of readUrl
-            AccessServlet.readUrl(serverIpAddress+"sendFreeLot?&lat="+lat+"&lon="+lon+"&avail=free&id=1");
+            AccessServlet.readUrl(serverIpAddress+"sendLotAvailability?&lat="+lat+"&lon="+lon+"&avail=free");
         } catch (Exception e) {
             e.printStackTrace();
             return "Free lot sender error.";
