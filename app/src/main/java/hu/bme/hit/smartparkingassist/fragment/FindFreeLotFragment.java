@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
-import hu.bme.hit.smartparkingassist.MapActivity;
 import hu.bme.hit.smartparkingassist.OsmActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.Utility;

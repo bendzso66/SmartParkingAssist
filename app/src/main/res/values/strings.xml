@@ -4,9 +4,6 @@
     <string name="find_free_lot">Find free lot!</string>
     <string name="view_all_on_map">View all on Map</string>
     <string name="title_activity_map">Map</string>
-    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
-        AIzaSyB1AzDVE9wb0KWMZ5SogkFZGs_cWM6DTt0
-    </string>
     <string name="server_ip_address">http://152.66.248.87:4567/</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_log_in">Log In</string>
