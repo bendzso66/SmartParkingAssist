@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -73,7 +74,7 @@ public class OsmActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GetRoadPointsTask.GET_ROAD_POINTS_FILTER)) {
                 Road road = intent.getParcelableExtra(GetRoadPointsTask.GET_ROAD_POINTS_ROADS_KEY);
-                Polyline roadOverlay = RoadManager.buildRoadOverlay(road, context);
+                Polyline roadOverlay = RoadManager.buildRoadOverlay(road, Color.RED, 8, context);
                 map.getOverlays().add(roadOverlay);
                 map.invalidate();
             }
