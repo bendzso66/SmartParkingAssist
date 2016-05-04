@@ -134,7 +134,7 @@ public class FindFreeLotFragment extends Fragment {
 
         viewAllOnMapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
+                Intent intent = new Intent(getActivity(), OsmActivity.class);
                 intent.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, wayItems);
                 startActivity(intent);
             }
@@ -183,7 +183,7 @@ public class FindFreeLotFragment extends Fragment {
                 }
             } else if (intent.getAction().equals(WayAdapter.SHOW_A_WAY_FILTER)) {
                 int position = intent.getIntExtra(WayAdapter.WAY_FILTER_POSITION_KEY, 0);
-                ArrayList<WayItem> aWayItem = new ArrayList<WayItem>();
+                ArrayList<WayItem> aWayItem = new ArrayList<>();
                 aWayItem.add(wayItems.get(position));
                 Intent intentForMap = new Intent(getActivity(), OsmActivity.class);
                 intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aWayItem);
