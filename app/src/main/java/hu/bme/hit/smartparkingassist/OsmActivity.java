@@ -16,5 +16,7 @@ public class OsmActivity extends Activity {
         setContentView(R.layout.activity_osm);
         MapView map = (MapView) findViewById(R.id.osm_map);
         map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
     }
 }
