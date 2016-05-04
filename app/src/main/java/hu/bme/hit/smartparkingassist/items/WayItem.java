@@ -7,7 +7,6 @@ public class WayItem implements Parcelable {
 
     private Integer wayId;
     private String nameOfWay;
-    private Integer gpsTime;
     private Double latitude1;
     private Double longitude1;
     private Double latitude2;
@@ -22,6 +21,8 @@ public class WayItem implements Parcelable {
         longitude1 = in.readDouble();
         latitude2 = in.readDouble();
         longitude2 = in.readDouble();
+        allSpaces = in.readInt();
+        freeSpaces = in.readInt();
         distance = in.readDouble();
     }
 
@@ -107,24 +108,6 @@ public class WayItem implements Parcelable {
      */
     public void setLongitude1(Double longitude1) {
         this.longitude1 = longitude1;
-    }
-
-    /**
-     *
-     * @return
-     * The gpsTime
-     */
-    public Integer getGpsTime() {
-        return gpsTime;
-    }
-
-    /**
-     *
-     * @param gpsTime
-     * The gpsTime
-     */
-    public void setGpsTime(Integer gpsTime) {
-        this.gpsTime = gpsTime;
     }
 
     /**
@@ -230,6 +213,8 @@ public class WayItem implements Parcelable {
         dest.writeDouble(longitude1);
         dest.writeDouble(latitude2);
         dest.writeDouble(longitude2);
+        dest.writeInt(allSpaces);
+        dest.writeInt(freeSpaces);
         dest.writeDouble(distance);
     }
 }

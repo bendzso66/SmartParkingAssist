@@ -51,21 +51,11 @@ public class OsmActivity extends Activity {
         double sumLatitude = 0;
         double sumLongitude = 0;
         for (WayItem wayItem : wayItems) {
-            double latitude1 = wayItem.getLatitude1();
-            double longitude1 = wayItem.getLongitude1();
-            double latitude2 = wayItem.getLatitude2();
-            double longitude2 = wayItem.getLongitude2();
-            GeoPoint startPoint = new GeoPoint(latitude1, longitude1);
-            GeoPoint endPoint = new GeoPoint(latitude2, longitude2);
-            ArrayList<GeoPoint> wayPoints = new ArrayList<>();
-            wayPoints.add(startPoint);
-            wayPoints.add(endPoint);
-            new GetRoadPointsTask(this).execute(wayPoints);
+            sumLatitude += wayItem.getLatitude1() + wayItem.getLatitude2();
+            sumLongitude += wayItem.getLongitude1() + wayItem.getLongitude2();
 
-            sumLatitude += latitude1 + latitude2;
-            sumLongitude += longitude1 + longitude2;
+            new GetRoadPointsTask(this).execute(wayItem);
         }
-
 
         IMapController mapController = map.getController();
         mapController.setZoom(18);
@@ -95,7 +85,8 @@ public class OsmActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GetRoadPointsTask.GET_ROAD_POINTS_FILTER)) {
                 Road road = intent.getParcelableExtra(GetRoadPointsTask.GET_ROAD_POINTS_RESULT_KEY);
-                Polyline roadOverlay = RoadManager.buildRoadOverlay(road, Color.RED, 8, context);
+                int lineColor = intent.getIntExtra(GetRoadPointsTask.GET_ROAD_COLOR_RESULT_KEY, Color.GRAY);
+                Polyline roadOverlay = RoadManager.buildRoadOverlay(road, lineColor, 8, context);
                 map.getOverlays().add(roadOverlay);
                 map.invalidate();
             }
