@@ -45,16 +45,33 @@ public class OsmActivity extends Activity {
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
 
-        GeoPoint startPoint = new GeoPoint(47.4986276, 19.0700189);
-        GeoPoint endPoint = new GeoPoint(47.4971664, 19.070468);
-        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(startPoint);
-        waypoints.add(endPoint);
-        new GetRoadPointsTask(this).execute(waypoints);
+        Intent intent = getIntent();
+        ArrayList<WayItem> wayItems = intent.getParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY);
+
+        double sumLatitude = 0;
+        double sumLongitude = 0;
+        for (WayItem wayItem : wayItems) {
+            double latitude1 = wayItem.getLatitude1();
+            double longitude1 = wayItem.getLongitude1();
+            double latitude2 = wayItem.getLatitude2();
+            double longitude2 = wayItem.getLongitude2();
+            GeoPoint startPoint = new GeoPoint(latitude1, longitude1);
+            GeoPoint endPoint = new GeoPoint(latitude2, longitude2);
+            ArrayList<GeoPoint> wayPoints = new ArrayList<>();
+            wayPoints.add(startPoint);
+            wayPoints.add(endPoint);
+            new GetRoadPointsTask(this).execute(wayPoints);
+
+            sumLatitude += latitude1 + latitude2;
+            sumLongitude += longitude1 + longitude2;
+        }
+
 
         IMapController mapController = map.getController();
-        mapController.setZoom(20);
-        mapController.setCenter(startPoint);
+        mapController.setZoom(18);
+        int numOfCoords = 2 * wayItems.size();
+        GeoPoint centerPoint = new GeoPoint(sumLatitude / numOfCoords, sumLongitude / numOfCoords);
+        mapController.setCenter(centerPoint);
 
         map.invalidate();
     }

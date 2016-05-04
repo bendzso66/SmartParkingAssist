@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.MapActivity;
+import hu.bme.hit.smartparkingassist.OsmActivity;
 import hu.bme.hit.smartparkingassist.R;
 import hu.bme.hit.smartparkingassist.Utility;
 import hu.bme.hit.smartparkingassist.adapters.WayAdapter;
@@ -182,10 +183,10 @@ public class FindFreeLotFragment extends Fragment {
                 }
             } else if (intent.getAction().equals(WayAdapter.SHOW_A_WAY_FILTER)) {
                 int position = intent.getIntExtra(WayAdapter.WAY_FILTER_POSITION_KEY, 0);
-                ArrayList<WayItem> aFreeLotItem = new ArrayList<WayItem>();
-                aFreeLotItem.add(wayItems.get(position));
-                Intent intentForMap = new Intent(getActivity(), MapActivity.class);
-                intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aFreeLotItem);
+                ArrayList<WayItem> aWayItem = new ArrayList<WayItem>();
+                aWayItem.add(wayItems.get(position));
+                Intent intentForMap = new Intent(getActivity(), OsmActivity.class);
+                intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aWayItem);
                 startActivity(intentForMap);
             }
         }

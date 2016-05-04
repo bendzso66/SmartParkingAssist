@@ -35,9 +35,9 @@ public class GetRoadPointsTask extends AsyncTask<ArrayList<GeoPoint>, Void, Road
 
     @Override
     protected Road doInBackground(ArrayList<GeoPoint>... params) {
-        ArrayList<GeoPoint> waypoints = params[0];
+        ArrayList<GeoPoint> wayPoints = params[0];
         RoadManager roadManager = new OSRMRoadManager(ctx);
-        Road road = roadManager.getRoad(waypoints);
+        Road road = roadManager.getRoad(wayPoints);
 
         return road;
     }
