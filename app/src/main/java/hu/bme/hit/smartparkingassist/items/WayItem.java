@@ -3,9 +3,6 @@ package hu.bme.hit.smartparkingassist.items;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WayItem implements Parcelable {
 
     private Integer wayId;
@@ -18,8 +15,6 @@ public class WayItem implements Parcelable {
     private Integer allSpaces;
     private Integer freeSpaces;
     private Double distance;
-    private List<Double> latitudes;
-    private List<Double> longitudes;
 
     protected WayItem(Parcel in) {
         nameOfWay = in.readString();
@@ -28,10 +23,6 @@ public class WayItem implements Parcelable {
         latitude2 = in.readDouble();
         longitude2 = in.readDouble();
         distance = in.readDouble();
-        latitudes = new ArrayList<Double>();
-        in.readList(latitudes, null);
-        longitudes = new ArrayList<Double>();
-        in.readList(longitudes, null);
     }
 
     public static final Creator<WayItem> CREATOR = new Creator<WayItem>() {
@@ -232,42 +223,6 @@ public class WayItem implements Parcelable {
         return 0;
     }
 
-    /**
-     *
-     * @return
-     * The longitudes
-     */
-    public List<Double> getLongitudes() {
-        return longitudes;
-    }
-
-    /**
-     *
-     * @param longitudes
-     * The longitudes
-     */
-    public void setDistance(List<Double> longitudes) {
-        this.longitudes = longitudes;
-    }
-
-    /**
-     *
-     * @return
-     * The latitudes
-     */
-    public List<Double> getLatitudes() {
-        return latitudes;
-    }
-
-    /**
-     *
-     * @param latitudes
-     * The latitudes
-     */
-    public void setLatitudes(List<Double> latitudes) {
-        this.latitudes = latitudes;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nameOfWay);
@@ -276,7 +231,5 @@ public class WayItem implements Parcelable {
         dest.writeDouble(latitude2);
         dest.writeDouble(longitude2);
         dest.writeDouble(distance);
-        dest.writeList(latitudes);
-        dest.writeList(longitudes);
     }
 }
