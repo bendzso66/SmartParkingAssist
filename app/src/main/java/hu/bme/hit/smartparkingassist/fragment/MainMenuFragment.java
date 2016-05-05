@@ -68,7 +68,6 @@ public class MainMenuFragment extends ListFragment {
         items.add(new MainMenuItem("Log in"));
         items.add(new MainMenuItem("Registration"));
         items.add(new MainMenuItem("Settings"));
-        items.add(new MainMenuItem("Osm"));
         MainMenuAdapter mainMenuAdapter = new MainMenuAdapter(getActivity().getApplicationContext(), items);
         setListAdapter(mainMenuAdapter);
         setHasOptionsMenu(true);

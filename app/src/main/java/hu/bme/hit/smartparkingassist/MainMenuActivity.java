@@ -139,9 +139,6 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Osm")) {
-                Intent detailIntent = new Intent(this, OsmActivity.class);
-                startActivity(detailIntent);
             }
 
             fragmentTransaction.commit();
@@ -161,11 +158,7 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Osm")) {
-                Intent detailIntent = new Intent(this, OsmActivity.class);
-                startActivity(detailIntent);
             }
-
         }
     }
 
