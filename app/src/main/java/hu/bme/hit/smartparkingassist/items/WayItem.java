@@ -7,6 +7,8 @@ public class WayItem implements Parcelable {
 
     private Integer wayId;
     private String nameOfWay;
+    private Double centerLatitude;
+    private Double centerLongitude;
     private Double latitude1;
     private Double longitude1;
     private Double latitude2;
@@ -17,6 +19,8 @@ public class WayItem implements Parcelable {
 
     protected WayItem(Parcel in) {
         nameOfWay = in.readString();
+        centerLatitude = in.readDouble();
+        centerLongitude = in.readDouble();
         latitude1 = in.readDouble();
         longitude1 = in.readDouble();
         latitude2 = in.readDouble();
@@ -72,6 +76,42 @@ public class WayItem implements Parcelable {
      */
     public void setNameOfWay(String nameOfWay) {
         this.nameOfWay = nameOfWay;
+    }
+
+    /**
+     *
+     * @return
+     * The centerLatitude
+     */
+    public Double getCenterLatitude() {
+        return centerLatitude;
+    }
+
+    /**
+     *
+     * @param centerLatitude
+     * The centerLatitude
+     */
+    public void setCenterLatitude(Double centerLatitude) {
+        this.centerLatitude = centerLatitude;
+    }
+
+    /**
+     *
+     * @return
+     * The centerLongitude
+     */
+    public Double getCenterLongitude() {
+        return centerLongitude;
+    }
+
+    /**
+     *
+     * @param centerLongitude
+     * The centerLongitude
+     */
+    public void setCenterLongitude(Double centerLongitude) {
+        this.centerLongitude = centerLongitude;
     }
 
     /**
@@ -209,6 +249,8 @@ public class WayItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nameOfWay);
+        dest.writeDouble(centerLatitude);
+        dest.writeDouble(centerLongitude);
         dest.writeDouble(latitude1);
         dest.writeDouble(longitude1);
         dest.writeDouble(latitude2);
