@@ -54,6 +54,13 @@ public class OsmActivity extends Activity {
             sumLatitude += wayItem.getLatitude1() + wayItem.getLatitude2();
             sumLongitude += wayItem.getLongitude1() + wayItem.getLongitude2();
 
+            GeoPoint centerPoint = new GeoPoint(wayItem.getCenterLatitude(), wayItem.getCenterLongitude());
+            Marker startMarker = new Marker(map);
+            startMarker.setPosition(centerPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setTitle("Num of spaces: " + wayItem.getFreeSpaces());
+            map.getOverlays().add(startMarker);
+
             new GetRoadPointsTask(this).execute(wayItem);
         }
 
