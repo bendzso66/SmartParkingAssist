@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -232,33 +234,43 @@ public class MainMenuActivity extends AppCompatActivity
     };
 
     private void showBluetoothDevices() {
-        final ArrayList<String> deviceStrs = new ArrayList();
-        final ArrayList<String> devices = new ArrayList();
-        ArrayList<String> deviceNames = new ArrayList();
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean isObdEnabled = myPrefs.getBoolean("obd_switch", false);
 
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                deviceStrs.add(device.getName() + "\n" + device.getAddress());
-                devices.add(device.getAddress());
-                deviceNames.add(device.getName());
+        if (isObdEnabled) {
+            final ArrayList<String> deviceStrs = new ArrayList();
+            final ArrayList<String> devices = new ArrayList();
+            ArrayList<String> deviceNames = new ArrayList();
+
+            BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+            Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    deviceStrs.add(device.getName() + "\n" + device.getAddress());
+                    devices.add(device.getAddress());
+                    deviceNames.add(device.getName());
+                }
             }
+
+            CharSequence[] deviceNamesCh = deviceNames.toArray(new CharSequence[deviceNames.size()]);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Select a bluetooth device");
+            builder.setItems(deviceNamesCh, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getApplicationContext(), ObdService.class);
+                    intent.putExtra(SELECTED_BLUETOOTH_DEVICE_KEY, devices.get(which));
+                    getApplicationContext().startService(intent);
+                }
+            });
+            builder.show();
+        } else {
+            Snackbar.make(findViewById(android.R.id.content).getRootView(),
+                    "Please turn on OBD monitoring!",
+                    Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
-
-        CharSequence[] deviceNamesCh = deviceNames.toArray(new CharSequence[deviceNames.size()]);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a bluetooth device");
-        builder.setItems(deviceNamesCh, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getApplicationContext(), ObdService.class);
-                intent.putExtra(SELECTED_BLUETOOTH_DEVICE_KEY, devices.get(which));
-                getApplicationContext().startService(intent);
-            }
-        });
-        builder.show();
 
     }
 }

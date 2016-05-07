@@ -9,6 +9,11 @@
         android:summary="Set maximum walk distance in meter"
         android:inputType="number" />
 
+    <SwitchPreference
+        android:key="obd_switch"
+        android:title="Switch OBD"
+        android:defaultValue="false" />
+
     <Preference xmlns:android="http://schemas.android.com/apk/res/android"
         android:key="pref_key_gpsStatus"
         android:title="Gps Settings" >
