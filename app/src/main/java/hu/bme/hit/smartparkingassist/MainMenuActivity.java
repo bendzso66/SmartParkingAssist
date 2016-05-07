@@ -1,5 +1,9 @@
 package hu.bme.hit.smartparkingassist;
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,7 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
@@ -29,6 +35,7 @@ import hu.bme.hit.smartparkingassist.fragment.RegistrationFragment;
 import hu.bme.hit.smartparkingassist.fragment.SettingsFragment;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
+import hu.bme.hit.smartparkingassist.service.ObdService;
 
 
 /**
@@ -60,6 +67,7 @@ public class MainMenuActivity extends AppCompatActivity
     private static final int THREE_MINUTE = 3 * 60 * 1000;
     LocationService myLocationService;
     boolean isBound = false;
+    public static final String SELECTED_BLUETOOTH_DEVICE_KEY = "SELECTED_BLUETOOTH_DEVICE_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +118,7 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        i = new Intent(getApplicationContext(),LocationService.class);
+        i = new Intent(getApplicationContext(), LocationService.class);
         bindService(i, locationServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -139,6 +147,8 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
+            } else if (selectedItemTitle.equals("Find OBD")) {
+                showBluetoothDevices();
             }
 
             fragmentTransaction.commit();
@@ -158,6 +168,8 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
+            } else if (selectedItemTitle.equals("Find OBD")) {
+                showBluetoothDevices();
             }
         }
     }
@@ -218,4 +230,35 @@ public class MainMenuActivity extends AppCompatActivity
         }
 
     };
+
+    private void showBluetoothDevices() {
+        final ArrayList<String> deviceStrs = new ArrayList();
+        final ArrayList<String> devices = new ArrayList();
+        ArrayList<String> deviceNames = new ArrayList();
+
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                deviceStrs.add(device.getName() + "\n" + device.getAddress());
+                devices.add(device.getAddress());
+                deviceNames.add(device.getName());
+            }
+        }
+
+        CharSequence[] deviceNamesCh = deviceNames.toArray(new CharSequence[deviceNames.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a bluetooth device");
+        builder.setItems(deviceNamesCh, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), ObdService.class);
+                intent.putExtra(SELECTED_BLUETOOTH_DEVICE_KEY, devices.get(which));
+                getApplicationContext().startService(intent);
+            }
+        });
+        builder.show();
+
+    }
 }

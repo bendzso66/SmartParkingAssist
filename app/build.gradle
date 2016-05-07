@@ -32,4 +32,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.3.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'com.github.pires:obd-java-api:1.0-RC15'
 }
