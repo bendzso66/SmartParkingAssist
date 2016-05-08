@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.github.pires.obd.commands.engine.RPMCommand;
+import com.github.pires.obd.commands.engine.RuntimeCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
@@ -40,44 +41,55 @@ public class ObdService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String deviceAddress = intent.getStringExtra(MainMenuActivity.SELECTED_BLUETOOTH_DEVICE_KEY);
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        btAdapter.cancelDiscovery();
         BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
 
         BluetoothSocket socket = null;
+        BluetoothSocket sockFallback;
+        UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         try {
-            //UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-            //socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-            Method m = device.getClass().getMethod("createInsecureRfcommSocket", new Class[]{int.class});
-            socket = (BluetoothSocket) m.invoke(device, Integer.valueOf(1));
-
-            Log.d("[OBDService]", "Trying to connect to " + deviceAddress);
+            socket = device.createRfcommSocketToServiceRecord(MY_UUID);
             socket.connect();
-            if (socket.isConnected()) {
-                Log.d("[OBDService]", "Bluetooth connection is established.");
+            Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
+        } catch (Exception e1) {
+            Log.e("[OBDService]", "There was an error while establishing Bluetooth connection. Falling back..", e1);
+            Class<?> clazz = socket.getRemoteDevice().getClass();
+            Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
+            try {
+                Method m = clazz.getMethod("createInsecureRfcommSocket", paramTypes);
+                Object[] params = new Object[]{Integer.valueOf(1)};
+                sockFallback = (BluetoothSocket) m.invoke(socket.getRemoteDevice(), params);
+                sockFallback.connect();
+                socket = sockFallback;
+                socket.connect();
+                Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
+            } catch (Exception e2) {
+                Log.e("[OBDService]", "Couldn't fallback while establishing Bluetooth connection.", e2);
             }
+        }
 
+        try {
             //initialization
             new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
             new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+        } catch (Exception e) {
+            Log.e("[OBDService]", "Initialization was unsuccessful.", e);
+        }
 
+        try {
             RPMCommand rpmCommand = new RPMCommand();
             rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-            Log.d("[OBDService]", "RPM: " + rpmCommand.getFormattedResult());
-
-            socket.close();
-            Log.d("[OBDService]", "Bluetooth connection is closed.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("[OBDService]", "RPM rpm: " + rpmCommand.getRPM());
+        } catch (Exception e1) {
+            Log.e("[OBDService]", "Couldn't receive RPM data from OBD device.", e1);
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e2) {
+                Log.e("[OBDService]", "Couldn't close Bluetooth connection.", e2);
+            }
         }
 
         stopSelf();
@@ -93,6 +105,6 @@ public class ObdService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("[OBDService]", "Service was stopped.");
+        Log.e("[OBDService]", "Service was stopped.");
     }
 }
