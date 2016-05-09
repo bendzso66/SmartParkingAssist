@@ -9,13 +9,13 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import hu.bme.hit.smartparkingassist.R;
 
-public class SendFreeLotTask extends AsyncTask<String, Void, String> {
+public class SendLotAvailabilityTask extends AsyncTask<String, Void, String> {
 
     public static final String SEND_FREE_LOT_FILTER = "SEND_FREE_LOT_FILTER";
     public static final String SEND_FREE_LOT_RESULT_KEY = "SEND_FREE_LOT_RESULT_KEY";
     private Context ctx;
 
-    public SendFreeLotTask(Context ctx) {
+    public SendLotAvailabilityTask(Context ctx) {
         this.ctx = ctx;
     }
 

@@ -23,18 +23,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
-import hu.bme.hit.smartparkingassist.communication.SendFreeLotTask;
+import hu.bme.hit.smartparkingassist.communication.SendLotAvailabilityTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
 import hu.bme.hit.smartparkingassist.fragment.LogInFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
 import hu.bme.hit.smartparkingassist.fragment.RegistrationFragment;
-import hu.bme.hit.smartparkingassist.fragment.SettingsFragment;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
 import hu.bme.hit.smartparkingassist.service.ObdService;
@@ -88,7 +86,7 @@ public class MainMenuActivity extends AppCompatActivity
                     Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
                     Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
                     if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
-                        new SendFreeLotTask(getApplicationContext()).execute(String.valueOf(currentLocation.getLatitude()),
+                        new SendLotAvailabilityTask(getApplicationContext()).execute(String.valueOf(currentLocation.getLatitude()),
                                 String.valueOf(currentLocation.getLongitude()),
                                 "free");
                     } else {
@@ -183,7 +181,7 @@ public class MainMenuActivity extends AppCompatActivity
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationService.BR_NEW_LOCATION);
-        intentFilter.addAction(SendFreeLotTask.SEND_FREE_LOT_FILTER);
+        intentFilter.addAction(SendLotAvailabilityTask.SEND_FREE_LOT_FILTER);
         intentFilter.addAction(ObdService.BR_PARKING_STATUS);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
     }
@@ -213,8 +211,8 @@ public class MainMenuActivity extends AppCompatActivity
                 Log.d("[LOCATION] speed: ", ((Float) currentLocation.getSpeed()).toString());
                 Log.d("[LOCATION] provider: ", currentLocation.getProvider());
                 Log.d("[LOCATION] time: ", new Date(currentLocation.getTime()).toString());
-            } else if (intent.getAction().equals(SendFreeLotTask.SEND_FREE_LOT_FILTER)) {
-                String result = intent.getStringExtra(SendFreeLotTask.SEND_FREE_LOT_RESULT_KEY);
+            } else if (intent.getAction().equals(SendLotAvailabilityTask.SEND_FREE_LOT_FILTER)) {
+                String result = intent.getStringExtra(SendLotAvailabilityTask.SEND_FREE_LOT_RESULT_KEY);
                 Snackbar.make(findViewById(android.R.id.content).getRootView(), result, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             } else if (intent.getAction().equals(ObdService.BR_PARKING_STATUS)) {
