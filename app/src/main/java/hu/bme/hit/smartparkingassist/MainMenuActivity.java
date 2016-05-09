@@ -16,7 +16,6 @@ import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -77,28 +76,6 @@ public class MainMenuActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentLocation != null) {
-                    Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
-                    Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
-                    if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
-                        new SendLotAvailabilityTask(getApplicationContext()).execute(String.valueOf(currentLocation.getLatitude()),
-                                String.valueOf(currentLocation.getLongitude()),
-                                "free");
-                    } else {
-                        Snackbar.make(view, "Location data was too old. Please move your phone.", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                } else {
-                    Snackbar.make(view, "No location data was captured so far...", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
 
         if (findViewById(R.id.find_free_lot_container) != null) {
             // The detail container view will be present only in the

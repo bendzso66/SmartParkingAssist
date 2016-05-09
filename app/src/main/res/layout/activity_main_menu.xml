@@ -24,10 +24,4 @@
         <include layout="@layout/activity_main_menu_list" />
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin" android:src="@raw/send_free_lot_fab_icon"
-        android:layout_gravity="bottom|end" />
-
-
 </android.support.design.widget.CoordinatorLayout>
