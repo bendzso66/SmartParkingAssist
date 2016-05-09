@@ -64,9 +64,9 @@ public class MainMenuActivity extends AppCompatActivity
     private boolean mTwoPane;
     Intent i = null;
     Location currentLocation = null;
-    private static final int THREE_MINUTE = 3 * 60 * 1000;
     LocationService myLocationService;
     boolean isBound = false;
+    public static final int THREE_MINUTE = 3 * 60 * 1000;
     public static final String SELECTED_BLUETOOTH_DEVICE_KEY = "SELECTED_BLUETOOTH_DEVICE_KEY";
 
     @Override
