@@ -182,6 +182,7 @@ public class MainMenuActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationService.BR_NEW_LOCATION);
         intentFilter.addAction(SendFreeLotTask.SEND_FREE_LOT_FILTER);
+        intentFilter.addAction(ObdService.BR_PARKING_STATUS);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -214,6 +215,10 @@ public class MainMenuActivity extends AppCompatActivity
                 String result = intent.getStringExtra(SendFreeLotTask.SEND_FREE_LOT_RESULT_KEY);
                 Snackbar.make(findViewById(android.R.id.content).getRootView(), result, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            } else if (intent.getAction().equals(ObdService.BR_PARKING_STATUS)) {
+                String availability = intent.getStringExtra(ObdService.PARKING_STATUS_KEY);
+                //TODO send availability
+                Log.d("[OBDService]", "Broadcast message is received: " + availability);
             }
         }
     };

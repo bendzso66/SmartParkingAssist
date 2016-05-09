@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.github.pires.obd.commands.engine.RPMCommand;
@@ -28,6 +29,8 @@ import hu.bme.hit.smartparkingassist.MainMenuActivity;
 public class ObdService extends Service {
 
     public static final String  PARKING_STATUS_PREF_KEY = "PARKING_STATUS_PREF_KEY";
+    public static final String BR_PARKING_STATUS = "BR_PARKIN_STATUS";
+    public static final String PARKING_STATUS_KEY = "PARKING_STATUS_KEY";
 
     private BluetoothSocket socket;
     private int fallbackCounter = 0;
@@ -49,13 +52,17 @@ public class ObdService extends Service {
 
             if (isParking != parkingStatus) {
                 sp.edit().putBoolean(PARKING_STATUS_PREF_KEY, isParking).commit();
+                Intent brIntent = new Intent(BR_PARKING_STATUS);
+
                 if (isParking) {
-                    //TODO send reserved http request
+                    brIntent.putExtra(PARKING_STATUS_KEY, "reserved");
                     Log.e("[OBDService]", "Send reserved parking status.");
                 } else {
-                    //TODO send free http request
+                    brIntent.putExtra(PARKING_STATUS_KEY, "free");
                     Log.e("[OBDService]", "Send free parking status.");
                 }
+
+                LocalBroadcastManager.getInstance(this).sendBroadcast(brIntent);
             } else {
                 Log.e("[OBDService]", "Parking status hasn't changed.");
             }
