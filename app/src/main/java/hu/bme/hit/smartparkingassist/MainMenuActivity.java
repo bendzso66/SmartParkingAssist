@@ -88,7 +88,9 @@ public class MainMenuActivity extends AppCompatActivity
                     Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
                     Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
                     if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
-                        new SendFreeLotTask(getApplicationContext()).execute(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        new SendFreeLotTask(getApplicationContext()).execute(String.valueOf(currentLocation.getLatitude()),
+                                String.valueOf(currentLocation.getLongitude()),
+                                "free");
                     } else {
                         Snackbar.make(view, "Location data was too old. Please move your phone.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();

@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import hu.bme.hit.smartparkingassist.R;
 
-public class SendFreeLotTask extends AsyncTask<Double, Void, String> {
+public class SendFreeLotTask extends AsyncTask<String, Void, String> {
 
     public static final String SEND_FREE_LOT_FILTER = "SEND_FREE_LOT_FILTER";
     public static final String SEND_FREE_LOT_RESULT_KEY = "SEND_FREE_LOT_RESULT_KEY";
@@ -19,19 +21,29 @@ public class SendFreeLotTask extends AsyncTask<Double, Void, String> {
 
 
     @Override
-    protected String doInBackground(Double... params) {
+    protected String doInBackground(String... params) {
+        String serverIpAddress = ctx.getResources().getString(R.string.server_ip_address);
+        String lat = params[0];
+        String lon = params[1];
+        String availability = params[2];
+
         try {
-            String serverIpAddress = ctx.getResources().getString(R.string.server_ip_address);
-            String lat = params[0].toString();
-            String lon = params[1].toString();
+
             //TODO check the returned parameter of readUrl
-            AccessServlet.readUrl(serverIpAddress+"sendLotAvailability?&lat="+lat+"&lon="+lon+"&avail=free");
+            AccessServlet.readUrl(serverIpAddress
+                    +"sendLotAvailability?&lat="
+                    +lat
+                    +"&lon="
+                    +lon
+                    +"&avail="
+                    + availability);
         } catch (Exception e) {
             e.printStackTrace();
-            return "Free lot sender error.";
+            return "Couldn't send " + availability + " lot availability.";
         }
 
-        return "Free lot is sent successfully!";
+        return WordUtils.capitalize(availability)
+                + " lot availability was sent successfully!";
     }
 
     @Override
