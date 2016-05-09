@@ -126,7 +126,7 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Find OBD")) {
+            } else if (selectedItemTitle.equals("Start OBD monitoring")) {
                 showBluetoothDevices();
             }
 
@@ -147,7 +147,7 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Find OBD")) {
+            } else if (selectedItemTitle.equals("Start OBD monitoring")) {
                 showBluetoothDevices();
             }
         }
