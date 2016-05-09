@@ -54,7 +54,7 @@ import hu.bme.hit.smartparkingassist.service.ObdService;
  * to listen for item selections.
  */
 public class MainMenuActivity extends AppCompatActivity
-        implements MainMenuFragment.IMainMenuFragment {
+        implements MainMenuFragment.IMainMenuFragment, FindFreeLotFragment.IFindFreeLotFragment {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -150,6 +150,26 @@ public class MainMenuActivity extends AppCompatActivity
             } else if (selectedItemTitle.equals("Find OBD")) {
                 showBluetoothDevices();
             }
+        }
+    }
+
+    @Override
+    public double getLatitude() {
+        if (currentLocation != null &&
+                currentLocation.getTime() + MainMenuActivity.THREE_MINUTE > System.currentTimeMillis()) {
+            return currentLocation.getLatitude();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public double getLongitude() {
+        if (currentLocation != null &&
+                currentLocation.getTime() + MainMenuActivity.THREE_MINUTE > System.currentTimeMillis()) {
+            return currentLocation.getLongitude();
+        } else {
+            return 0;
         }
     }
 
@@ -264,4 +284,5 @@ public class MainMenuActivity extends AppCompatActivity
         }
 
     }
+
 }

@@ -35,13 +35,34 @@ import hu.bme.hit.smartparkingassist.service.ObdService;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link FindFreeLotFragment}.
  */
-public class FindFreeLotActivity extends AppCompatActivity {
+public class FindFreeLotActivity extends AppCompatActivity
+        implements FindFreeLotFragment.IFindFreeLotFragment {
 
     Location currentLocation = null;
 
     Intent i = null;
     LocationService myLocationService;
     boolean isBound = false;
+
+    @Override
+    public double getLatitude() {
+        if (currentLocation != null &&
+                currentLocation.getTime() + MainMenuActivity.THREE_MINUTE > System.currentTimeMillis()) {
+            return currentLocation.getLatitude();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public double getLongitude() {
+        if (currentLocation != null &&
+                currentLocation.getTime() + MainMenuActivity.THREE_MINUTE > System.currentTimeMillis()) {
+            return currentLocation.getLongitude();
+        } else {
+            return 0;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,4 +188,5 @@ public class FindFreeLotActivity extends AppCompatActivity {
         }
 
     };
+
 }

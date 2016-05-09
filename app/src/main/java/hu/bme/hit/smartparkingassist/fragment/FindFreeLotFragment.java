@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,13 @@ public class FindFreeLotFragment extends Fragment {
     private WayAdapter freeLotAdapter = null;
 
     private String SAVE_FREE_LOT_ITEMS_KEY = "SAVE_FREE_LOT_ITEMS_KEY";
+
+    private IFindFreeLotFragment listener;
+
+    public interface IFindFreeLotFragment {
+        double getLatitude();
+        double getLongitude();
+    }
 
     public static FindFreeLotFragment newInstance(String itemDesc) {
         FindFreeLotFragment result = new FindFreeLotFragment();
@@ -143,11 +152,32 @@ public class FindFreeLotFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof IFindFreeLotFragment)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        listener = (IFindFreeLotFragment) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        // Reset the active callbacks interface to the dummy implementation.
+        listener = null;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER);
         intentFilter.addAction(WayAdapter.SHOW_A_WAY_FILTER);
+        intentFilter.addAction(WayAdapter.NAVIGATE_TO_A_WAY_FILTER);
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -187,6 +217,35 @@ public class FindFreeLotFragment extends Fragment {
                 Intent intentForMap = new Intent(getActivity(), OsmActivity.class);
                 intentForMap.putParcelableArrayListExtra(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FREE_LOTS_KEY, aWayItem);
                 startActivity(intentForMap);
+            } else if (intent.getAction().equals(WayAdapter.NAVIGATE_TO_A_WAY_FILTER)) {
+                if (listener != null) {
+                    double currentLatitude = listener.getLatitude();
+                    double currentLongitude = listener.getLongitude();
+                    if (currentLatitude != 0 && currentLongitude != 0) {
+                        int position = intent.getIntExtra(WayAdapter.WAY_FILTER_POSITION_KEY, 0);
+                        double latitude = wayItems.get(position).getCenterLatitude();
+                        double longitude = wayItems.get(position).getCenterLongitude();
+                        Intent intentForNav = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?"
+                                + "saddr="
+                                + currentLatitude
+                                + ","
+                                + currentLongitude
+                                + "&daddr="
+                                + latitude
+                                + ","
+                                + longitude));
+                        intentForNav.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                        startActivity(intentForNav);
+                    } else {
+                        Log.e("[NAVIGATION]", "Too old coordinates.");
+                        Snackbar.make(rootView, "Unable to reach current position.", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                } else {
+                    Log.e("[NAVIGATION]", "Listener is null.");
+                    Snackbar.make(rootView, "Unable to reach current position.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         }
     };

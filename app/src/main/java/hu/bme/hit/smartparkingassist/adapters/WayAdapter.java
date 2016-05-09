@@ -23,6 +23,7 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
     private Context context;
 
     public static final String SHOW_A_WAY_FILTER = "SHOW_A_WAY_FILTER";
+    public static final String NAVIGATE_TO_A_WAY_FILTER = "NAVIGATE_TO_A_WAY_FILTER";
     public static final String WAY_FILTER_POSITION_KEY = "WAY_FILTER_POSITION_KEY";
 
     public WayAdapter(final Context aContext, final ArrayList<WayItem> aWayItems) {
@@ -75,11 +76,13 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
             }
         });
 
-        ImageButton navigateToFreeBtn = ((ImageButton) itemView.findViewById(R.id.navigate_free_lot));
-        navigateToFreeBtn.setOnClickListener(new View.OnClickListener() {
+        ImageButton navigateToWayBtn = ((ImageButton) itemView.findViewById(R.id.navigate_free_lot));
+        navigateToWayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("navigateToFreeBtn", ((Integer) position).toString());
+                Intent intent = new Intent(NAVIGATE_TO_A_WAY_FILTER);
+                intent.putExtra(WAY_FILTER_POSITION_KEY, position);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             }
         });
 
