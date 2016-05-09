@@ -3,6 +3,7 @@ package hu.bme.hit.smartparkingassist.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,14 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
                 Intent intent = new Intent(SHOW_A_WAY_FILTER);
                 intent.putExtra(WAY_FILTER_POSITION_KEY, position);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
+
+        ImageButton navigateToFreeBtn = ((ImageButton) itemView.findViewById(R.id.navigate_free_lot));
+        navigateToFreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("navigateToFreeBtn", ((Integer) position).toString());
             }
         });
 
