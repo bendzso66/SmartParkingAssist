@@ -217,8 +217,17 @@ public class MainMenuActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             } else if (intent.getAction().equals(ObdService.BR_PARKING_STATUS)) {
                 String availability = intent.getStringExtra(ObdService.PARKING_STATUS_KEY);
-                //TODO send availability
                 Log.d("[OBDService]", "Broadcast message is received: " + availability);
+
+                if (currentLocation != null) {
+                    Log.d("[SendFreeLot] GPS time: ", ((Long) currentLocation.getTime()).toString());
+                    Log.d("[SendFreeLot] current millis: ", ((Long) System.currentTimeMillis()).toString());
+                    if (currentLocation.getTime() + THREE_MINUTE > System.currentTimeMillis()) {
+                        new SendLotAvailabilityTask(getApplicationContext()).execute(String.valueOf(currentLocation.getLatitude()),
+                                String.valueOf(currentLocation.getLongitude()),
+                                availability);
+                    }
+                }
             }
         }
     };
