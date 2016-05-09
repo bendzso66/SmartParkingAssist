@@ -11,7 +11,7 @@
 
     <SwitchPreference
         android:key="obd_switch"
-        android:title="Switch OBD"
+        android:title="OBD monitoring"
         android:defaultValue="false" />
 
     <Preference xmlns:android="http://schemas.android.com/apk/res/android"
