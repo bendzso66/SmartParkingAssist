@@ -1,5 +1,7 @@
 package hu.bme.hit.smartparkingassist.service;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -32,10 +34,12 @@ public class ObdService extends Service {
     private boolean isParking;
     private boolean isConnectionOk = false;
     private static final String OBD_NODATA_ERROR_MSG = "NODATA";
+    private String deviceAddress;
+    private static final int THIRTY_SECOND = 1000 * 30;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String deviceAddress = intent.getStringExtra(MainMenuActivity.SELECTED_BLUETOOTH_DEVICE_KEY);
+        deviceAddress = intent.getStringExtra(MainMenuActivity.SELECTED_BLUETOOTH_DEVICE_KEY);
         checkParkingStatus(deviceAddress);
         Log.e("[OBDService]", "Current parking status: " + isParking);
 
@@ -72,6 +76,19 @@ public class ObdService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean isObdEnabled = myPrefs.getBoolean("obd_switch", false);
+
+        if (isObdEnabled) {
+            AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(this, ObdService.class);
+            intent.putExtra(MainMenuActivity.SELECTED_BLUETOOTH_DEVICE_KEY, deviceAddress);
+            alarm.set(alarm.RTC,
+                    System.currentTimeMillis() + THIRTY_SECOND,
+                    PendingIntent.getService(this, 0, intent, 0));
+        }
+
         Log.e("[OBDService]", "Service was stopped.");
     }
 
