@@ -1,95 +1,62 @@
 package hu.bme.hit.smartparkingassist.service;
 
-import android.app.AlertDialog;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Binder;
+import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.speech.tts.TextToSpeech;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.github.pires.obd.commands.engine.RPMCommand;
-import com.github.pires.obd.commands.engine.RuntimeCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.commands.protocol.TimeoutCommand;
-import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Set;
 import java.util.UUID;
 
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
-import hu.bme.hit.smartparkingassist.communication.LogInTask;
 
 public class ObdService extends Service {
+
+    public static final String  PARKING_STATUS_PREF_KEY = "PARKING_STATUS_PREF_KEY";
+
+    private BluetoothSocket socket;
+    private int fallbackCounter = 0;
+    private boolean isParking;
+    private boolean isConnectionOk = false;
+    private static final String OBD_NODATA_ERROR_MSG = "NODATA";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String deviceAddress = intent.getStringExtra(MainMenuActivity.SELECTED_BLUETOOTH_DEVICE_KEY);
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        btAdapter.cancelDiscovery();
-        BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
+        checkParkingStatus(deviceAddress);
+        Log.e("[OBDService]", "Current parking status: " + isParking);
 
-        BluetoothSocket socket = null;
-        BluetoothSocket sockFallback;
-        UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-        try {
-            socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-            socket.connect();
-            Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
-        } catch (Exception e1) {
-            Log.e("[OBDService]", "There was an error while establishing Bluetooth connection. Falling back..", e1);
-            Class<?> clazz = socket.getRemoteDevice().getClass();
-            Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
-            try {
-                Method m = clazz.getMethod("createInsecureRfcommSocket", paramTypes);
-                Object[] params = new Object[]{Integer.valueOf(1)};
-                sockFallback = (BluetoothSocket) m.invoke(socket.getRemoteDevice(), params);
-                sockFallback.connect();
-                socket = sockFallback;
-                socket.connect();
-                Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
-            } catch (Exception e2) {
-                Log.e("[OBDService]", "Couldn't fallback while establishing Bluetooth connection.", e2);
+        if (isConnectionOk) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean parkingStatus = sp.getBoolean(PARKING_STATUS_PREF_KEY, false);
+
+            if (isParking != parkingStatus) {
+                sp.edit().putBoolean(PARKING_STATUS_PREF_KEY, isParking).commit();
+                if (isParking) {
+                    //TODO send reserved http request
+                    Log.e("[OBDService]", "Send reserved parking status.");
+                } else {
+                    //TODO send free http request
+                    Log.e("[OBDService]", "Send free parking status.");
+                }
+            } else {
+                Log.e("[OBDService]", "Parking status hasn't changed.");
             }
-        }
-
-        try {
-            //initialization
-            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
-        } catch (Exception e) {
-            Log.e("[OBDService]", "Initialization was unsuccessful.", e);
-        }
-
-        try {
-            RPMCommand rpmCommand = new RPMCommand();
-            rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
-            Log.e("[OBDService]", "RPM rpm: " + rpmCommand.getRPM());
-        } catch (Exception e1) {
-            Log.e("[OBDService]", "Couldn't receive RPM data from OBD device.", e1);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e2) {
-                Log.e("[OBDService]", "Couldn't close Bluetooth connection.", e2);
-            }
+        } else {
+            Log.e("[OBDService]", "Cannot determine parking status due to a connection error.");
         }
 
         stopSelf();
@@ -107,4 +74,95 @@ public class ObdService extends Service {
         super.onDestroy();
         Log.e("[OBDService]", "Service was stopped.");
     }
+
+    private void checkParkingStatus(String deviceAddress) {
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        btAdapter.cancelDiscovery();
+        BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
+
+        socket = null;
+        BluetoothSocket sockFallback;
+        UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+        try {
+            socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+            socket.connect();
+            isConnectionOk = true;
+            Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
+        } catch (Exception e1) {
+            Log.e("[OBDService]", "There was an error while establishing Bluetooth connection. Falling back..", e1);
+            Class<?> clazz = socket.getRemoteDevice().getClass();
+            Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
+            try {
+                Method m = clazz.getMethod("createInsecureRfcommSocket", paramTypes);
+                Object[] params = new Object[]{Integer.valueOf(1)};
+                sockFallback = (BluetoothSocket) m.invoke(socket.getRemoteDevice(), params);
+                sockFallback.connect();
+                socket = sockFallback;
+                socket.connect();
+                isConnectionOk = true;
+                Log.e("[OBDService]", "Bluetooth connection with OBD device is established.");
+            } catch (Exception e2) {
+                Log.e("[OBDService]", "Couldn't fallback while establishing Bluetooth connection.", e2);
+            }
+        }
+
+        if (isConnectionOk) {
+            try {
+                //initialization
+                new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+                new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+                new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+                new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+                checkRpmStatus();
+            } catch (Exception e) {
+                isConnectionOk = false;
+                Log.e("[OBDService]", "Initialization was unsuccessful.", e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    Log.e("[OBDService]", "Couldn't close Bluetooth connection.", e);
+                }
+            }
+        }
+    }
+
+    private void checkRpmStatus() {
+        try {
+            RPMCommand rpmCommand = new RPMCommand();
+            rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
+            int rpm = rpmCommand.getRPM();
+            Log.e("[OBDService]", "RPM rpm: " + rpm);
+            if (rpm > 0) {
+                isParking = false;
+            } else if (rpm == 0) {
+                isParking = true;
+            } else {
+                Log.e("[OBDService]", "Invalid RPM value.");
+            }
+        } catch (Exception e1) {
+            Log.e("[OBDService]", "Couldn't receive RPM data from OBD device.", e1);
+            String errorMsg = e1.getMessage();
+            if (fallbackCounter++ < 3 && errorMsg.contains(OBD_NODATA_ERROR_MSG)) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e2) {
+                    e2.printStackTrace();
+                }
+                checkRpmStatus();
+            } else if (fallbackCounter >= 3  && errorMsg.contains(OBD_NODATA_ERROR_MSG)) {
+                isParking = true;
+            } else {
+                isConnectionOk = false;
+                Log.e("[OBDService]", "Unexpected error message: " + errorMsg);
+            }
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e2) {
+                Log.e("[OBDService]", "Couldn't close Bluetooth connection.", e2);
+            }
+        }
+    }
+
 }
