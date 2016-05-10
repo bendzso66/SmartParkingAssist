@@ -3,7 +3,6 @@ package hu.bme.hit.smartparkingassist.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,9 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
     public static final String SHOW_A_WAY_FILTER = "SHOW_A_WAY_FILTER";
     public static final String NAVIGATE_TO_A_WAY_FILTER = "NAVIGATE_TO_A_WAY_FILTER";
     public static final String WAY_FILTER_POSITION_KEY = "WAY_FILTER_POSITION_KEY";
+    public static final String PARKING_INFO_FILTER = "PARKING_INFO_FILTER";
+    public static final String WAY_ID_KEY = "WAY_ID_KEY";
+    public static final String NAME_OF_WAY_KEY = "NAME_OF_WAY_KEY";
 
     public WayAdapter(final Context aContext, final ArrayList<WayItem> aWayItems) {
         context = aContext;
@@ -49,7 +51,7 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
     /**
      * Sor megjelenítésének beállítása
      */
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
 
         final WayItem item = wayItems.get(position);
         View itemView = convertView;
@@ -58,6 +60,16 @@ public class WayAdapter extends BaseAdapter implements View.OnClickListener {
                     Context.LAYOUT_INFLATER_SERVICE);
             itemView = inflater.inflate(R.layout.way_item_row, parent, false);
         }
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PARKING_INFO_FILTER);
+                intent.putExtra(WAY_ID_KEY, String.valueOf(item.getWayId()));
+                intent.putExtra(NAME_OF_WAY_KEY, String.valueOf(item.getNameOfWay()));
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
 
         TextView addressTextView = (TextView) itemView.findViewById(R.id.address_item);
         addressTextView.setText(item.getNameOfWay());

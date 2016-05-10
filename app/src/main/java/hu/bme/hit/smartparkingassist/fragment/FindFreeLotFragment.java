@@ -26,6 +26,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import hu.bme.hit.smartparkingassist.FindFreeLotActivity;
+import hu.bme.hit.smartparkingassist.GetParkingInfoActivity;
 import hu.bme.hit.smartparkingassist.MainMenuActivity;
 import hu.bme.hit.smartparkingassist.OsmActivity;
 import hu.bme.hit.smartparkingassist.R;
@@ -178,6 +179,7 @@ public class FindFreeLotFragment extends Fragment {
         intentFilter.addAction(FindFreeLotFromAddressTask.FIND_FREE_LOT_FROM_ADDRESS_FILTER);
         intentFilter.addAction(WayAdapter.SHOW_A_WAY_FILTER);
         intentFilter.addAction(WayAdapter.NAVIGATE_TO_A_WAY_FILTER);
+        intentFilter.addAction(WayAdapter.PARKING_INFO_FILTER);
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -246,6 +248,13 @@ public class FindFreeLotFragment extends Fragment {
                     Snackbar.make(rootView, "Unable to reach current position.", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
+            } else if (intent.getAction().equals(WayAdapter.PARKING_INFO_FILTER)) {
+                String wayId = intent.getStringExtra(WayAdapter.WAY_ID_KEY);
+                String nameOfWay = intent.getStringExtra(WayAdapter.NAME_OF_WAY_KEY);
+                Intent i = new Intent(getActivity(), GetParkingInfoActivity.class);
+                i.putExtra(WayAdapter.WAY_ID_KEY, wayId);
+                i.putExtra(WayAdapter.NAME_OF_WAY_KEY, nameOfWay);
+                startActivity(i);
             }
         }
     };

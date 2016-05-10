@@ -70,6 +70,12 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".GetParkingInfoActivity"
+            android:label="@string/title_activity_get_parking_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
