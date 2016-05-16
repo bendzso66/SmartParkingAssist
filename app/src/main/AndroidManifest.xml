@@ -50,16 +50,6 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".LogInActivity"
-            android:label="@string/title_activity_log_in"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".RegistrationActivity"
-            android:label="@string/title_activity_registration"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
             android:name=".OsmActivity"
             android:label="@string/title_activity_osm"
             android:theme="@style/AppTheme.NoActionBar" >

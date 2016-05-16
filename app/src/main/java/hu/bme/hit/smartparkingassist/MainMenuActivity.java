@@ -21,7 +21,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,9 +28,7 @@ import java.util.Set;
 
 import hu.bme.hit.smartparkingassist.communication.SendLotAvailabilityTask;
 import hu.bme.hit.smartparkingassist.fragment.FindFreeLotFragment;
-import hu.bme.hit.smartparkingassist.fragment.LogInFragment;
 import hu.bme.hit.smartparkingassist.fragment.MainMenuFragment;
-import hu.bme.hit.smartparkingassist.fragment.RegistrationFragment;
 import hu.bme.hit.smartparkingassist.items.MainMenuItem;
 import hu.bme.hit.smartparkingassist.service.LocationService;
 import hu.bme.hit.smartparkingassist.service.ObdService;
@@ -117,12 +114,6 @@ public class MainMenuActivity extends AppCompatActivity
             if (selectedItemTitle.equals("Find free lot")) {
                 FindFreeLotFragment fragment = FindFreeLotFragment.newInstance(aItem.getTitle());
                 fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
-            } else if (selectedItemTitle.equals("Log in")) {
-                LogInFragment fragment = new LogInFragment();
-                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
-            } else if (selectedItemTitle.equals("Registration")) {
-                RegistrationFragment fragment = new RegistrationFragment();
-                fragmentTransaction.replace(R.id.find_free_lot_container, fragment);
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);
                 startActivity(detailIntent);
@@ -137,12 +128,6 @@ public class MainMenuActivity extends AppCompatActivity
             if (selectedItemTitle.equals("Find free lot")) {
                 Intent detailIntent = new Intent(this, FindFreeLotActivity.class);
                 detailIntent.putExtra(FindFreeLotFragment.KEY_TITLE_DESCRIPTION_QUERY, aItem.getTitle());
-                startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Log in")) {
-                Intent detailIntent = new Intent(this, LogInActivity.class);
-                startActivity(detailIntent);
-            } else if (selectedItemTitle.equals("Registration")) {
-                Intent detailIntent = new Intent(this, RegistrationActivity.class);
                 startActivity(detailIntent);
             } else if (selectedItemTitle.equals("Settings")) {
                 Intent detailIntent = new Intent(this, SettingsActivity.class);

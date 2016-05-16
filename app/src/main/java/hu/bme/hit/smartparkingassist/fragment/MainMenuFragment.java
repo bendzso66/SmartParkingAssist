@@ -65,8 +65,6 @@ public class MainMenuFragment extends ListFragment {
 
         ArrayList<MainMenuItem> items = new ArrayList<>();
         items.add(new MainMenuItem("Find free lot"));
-        items.add(new MainMenuItem("Log in"));
-        items.add(new MainMenuItem("Registration"));
         items.add(new MainMenuItem("Settings"));
         items.add(new MainMenuItem("Start OBD monitoring"));
         MainMenuAdapter mainMenuAdapter = new MainMenuAdapter(getActivity().getApplicationContext(), items);
